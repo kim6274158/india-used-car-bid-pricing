@@ -1,0 +1,1232 @@
+<title>AutoBridge AI</title>
+<style>
+  :root{
+    color-scheme: light;
+    --page-plane:#f5f2ea;
+    --surface-1:#fdfcf8;
+    --surface-2:#f7f4ec;
+    --surface-3:#f0ece1;
+    --text-primary:#17140f;
+    --text-secondary:#57524a;
+    --text-muted:#8a8577;
+    --border:rgba(23,20,15,0.12);
+    --gridline:#e6e1d4;
+    --baseline:#c7c1b0;
+    --track:#eae5d8;
+    --brand:#a8681a;
+    --brand-strong:#8a5313;
+    --brand-ink:#fffaf1;
+    --brand-soft:#f0e0c4;
+    --accent-2:#2f5f7a;
+    --accent-2-soft:#dfe9ee;
+    --good:#0ca30c;
+    --warning:#b8790a;
+    --serious:#c1652f;
+    --critical:#c0322f;
+    --series-1:#2a78d6;
+    --series-2:#eb6834;
+    --series-3:#1baf7a;
+    --series-4:#eda100;
+    --series-5:#e87ba4;
+    --series-6:#008300;
+    --series-7:#4a3aa7;
+    --series-8:#e34948;
+    --shadow-sm:0 1px 2px rgba(23,20,15,0.06);
+    --shadow-lg:0 10px 30px -14px rgba(23,20,15,0.28);
+    --radius-sm:6px;
+    --radius-md:10px;
+    --radius-lg:16px;
+    --font-sans: -apple-system, "Segoe UI", "Malgun Gothic", "Apple SD Gothic Neo", system-ui, sans-serif;
+    --font-mono: ui-monospace, "Cascadia Mono", Consolas, Menlo, monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      color-scheme: dark;
+      --page-plane:#0b0c0e;
+      --surface-1:#15171b;
+      --surface-2:#1a1d22;
+      --surface-3:#20242a;
+      --text-primary:#f5f3ec;
+      --text-secondary:#b8b4a8;
+      --text-muted:#83807a;
+      --border:rgba(245,243,236,0.12);
+      --gridline:#2a2d33;
+      --baseline:#3a3d43;
+      --track:#262a30;
+      --brand:#e2a03f;
+      --brand-strong:#f0b667;
+      --brand-ink:#1c1204;
+      --brand-soft:rgba(226,160,63,0.16);
+      --accent-2:#7fb2d6;
+      --accent-2-soft:rgba(127,178,214,0.14);
+      --good:#3fc23f;
+      --warning:#eab04a;
+      --serious:#e8916a;
+      --critical:#e8635f;
+      --series-1:#3987e5;
+      --series-2:#d95926;
+      --series-3:#199e70;
+      --series-4:#c98500;
+      --series-5:#d55181;
+      --series-6:#3fc23f;
+      --series-7:#9085e9;
+      --series-8:#e66767;
+      --shadow-sm:0 1px 2px rgba(0,0,0,0.5);
+      --shadow-lg:0 16px 40px -16px rgba(0,0,0,0.6);
+    }
+  }
+  :root[data-theme="dark"]{
+    color-scheme: dark;
+    --page-plane:#0b0c0e;
+    --surface-1:#15171b;
+    --surface-2:#1a1d22;
+    --surface-3:#20242a;
+    --text-primary:#f5f3ec;
+    --text-secondary:#b8b4a8;
+    --text-muted:#83807a;
+    --border:rgba(245,243,236,0.12);
+    --gridline:#2a2d33;
+    --baseline:#3a3d43;
+    --track:#262a30;
+    --brand:#e2a03f;
+    --brand-strong:#f0b667;
+    --brand-ink:#1c1204;
+    --brand-soft:rgba(226,160,63,0.16);
+    --accent-2:#7fb2d6;
+    --accent-2-soft:rgba(127,178,214,0.14);
+    --good:#3fc23f;
+    --warning:#eab04a;
+    --serious:#e8916a;
+    --critical:#e8635f;
+    --series-1:#3987e5;
+    --series-2:#d95926;
+    --series-3:#199e70;
+    --series-4:#c98500;
+    --series-5:#d55181;
+    --series-6:#3fc23f;
+    --series-7:#9085e9;
+    --series-8:#e66767;
+    --shadow-sm:0 1px 2px rgba(0,0,0,0.5);
+    --shadow-lg:0 16px 40px -16px rgba(0,0,0,0.6);
+  }
+
+  *,*::before,*::after{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--page-plane);
+    color:var(--text-primary);
+    font-family:var(--font-sans);
+    font-size:14.5px;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,h4{margin:0;text-wrap:balance;font-weight:700;letter-spacing:-0.01em;}
+  p{margin:0;}
+  button{font-family:inherit;}
+  ::selection{background:var(--brand-soft);}
+  a{color:var(--accent-2);}
+  .num{font-variant-numeric:tabular-nums;}
+  .mono{font-family:var(--font-mono);}
+  .visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;}
+  :focus-visible{outline:2px solid var(--brand);outline-offset:2px;border-radius:4px;}
+
+  /* ---------- shell ---------- */
+  .app{max-width:1320px;margin:0 auto;padding:0 20px 64px;}
+
+  .masthead{
+    position:sticky; top:0; z-index:40;
+    background:color-mix(in srgb, var(--surface-1) 92%, transparent);
+    -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--border);
+  }
+  .masthead-inner{max-width:1320px;margin:0 auto;padding:14px 20px;display:flex;align-items:center;gap:24px;flex-wrap:wrap;}
+  .brand{display:flex;align-items:center;gap:10px;}
+  .brand-mark{
+    width:34px;height:34px;border-radius:9px;flex:0 0 auto;
+    background:linear-gradient(155deg, var(--brand) 0%, var(--brand-strong) 100%);
+    display:flex;align-items:center;justify-content:center;
+    color:var(--brand-ink); font-weight:800; font-size:15px; letter-spacing:-0.03em;
+    box-shadow:var(--shadow-sm);
+  }
+  .brand-text{display:flex;flex-direction:column;line-height:1.2;}
+  .brand-name{font-size:16.5px;font-weight:800;letter-spacing:-0.01em;}
+  .brand-tag{font-size:11px;color:var(--text-muted);letter-spacing:.02em;}
+
+  .kpi-strip{display:flex;gap:22px;margin-left:auto;flex-wrap:wrap;}
+  .kpi{display:flex;flex-direction:column;gap:1px;min-width:82px;}
+  .kpi .k-label{font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:var(--text-muted);font-weight:600;}
+  .kpi .k-value{font-size:14px;font-weight:700;font-variant-numeric:tabular-nums;}
+  .kpi .k-value.accent{color:var(--brand);}
+
+  .tabbar{max-width:1320px;margin:0 auto;padding:0 20px;display:flex;gap:4px;border-bottom:1px solid var(--border);}
+  .tabbtn{
+    appearance:none;border:none;background:transparent;cursor:pointer;
+    padding:13px 16px 12px; font-size:13.5px; font-weight:600; color:var(--text-secondary);
+    border-bottom:2px solid transparent; display:flex; align-items:center; gap:7px;
+    transition:color .15s ease, border-color .15s ease;
+  }
+  .tabbtn .tag{font-family:var(--font-mono);font-size:10px;color:var(--text-muted);background:var(--surface-3);padding:1px 5px;border-radius:4px;}
+  .tabbtn:hover{color:var(--text-primary);}
+  .tabbtn[aria-selected="true"]{color:var(--brand); border-bottom-color:var(--brand);}
+  .tabbtn[aria-selected="true"] .tag{color:var(--brand); background:var(--brand-soft);}
+
+  .tabpanel{padding-top:24px;display:none;}
+  .tabpanel.active{display:block;}
+
+  /* ---------- generic pieces ---------- */
+  .eyebrow{font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--brand);margin-bottom:6px;}
+  .section-head{display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin-bottom:14px;flex-wrap:wrap;}
+  .section-head h2{font-size:20px;}
+  .section-sub{color:var(--text-secondary);font-size:13px;max-width:640px;}
+
+  .card{
+    background:var(--surface-1); border:1px solid var(--border); border-radius:var(--radius-lg);
+    padding:20px; box-shadow:var(--shadow-sm);
+  }
+  .card-title{font-size:13.5px;font-weight:700;margin-bottom:2px;}
+  .card-desc{font-size:12px;color:var(--text-muted);margin-bottom:14px;}
+
+  .badge{
+    display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;
+    padding:3px 9px;border-radius:99px;letter-spacing:.01em;
+  }
+  .badge-good{background:color-mix(in srgb, var(--good) 16%, transparent);color:var(--good);}
+  .badge-warn{background:color-mix(in srgb, var(--warning) 18%, transparent);color:var(--warning);}
+  .badge-critical{background:color-mix(in srgb, var(--critical) 16%, transparent);color:var(--critical);}
+  .badge-brand{background:var(--brand-soft);color:var(--brand-strong);}
+  .badge-neutral{background:var(--surface-3);color:var(--text-secondary);}
+  :root:not([data-theme="light"]) .badge-brand{color:var(--brand);}
+  @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .badge-brand{color:var(--brand);}}
+
+  .btn{
+    appearance:none;border:1px solid var(--border);background:var(--surface-2);color:var(--text-primary);
+    padding:9px 14px;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;
+    display:inline-flex;align-items:center;gap:6px;transition:background .15s ease, border-color .15s ease, transform .05s ease;
+  }
+  .btn:hover{background:var(--surface-3);}
+  .btn:active{transform:translateY(1px);}
+  .btn-primary{background:var(--brand);border-color:var(--brand);color:var(--brand-ink);}
+  .btn-primary:hover{background:var(--brand-strong);border-color:var(--brand-strong);}
+  .btn-sm{padding:6px 10px;font-size:12px;border-radius:7px;}
+  .btn-ghost{background:transparent;}
+
+  /* ---------- form controls ---------- */
+  .field{display:flex;flex-direction:column;gap:6px;margin-bottom:16px;}
+  .field label{font-size:12px;font-weight:600;color:var(--text-secondary);display:flex;justify-content:space-between;}
+  .field label .fv{font-family:var(--font-mono);color:var(--text-primary);font-weight:700;}
+  select, input[type="text"]{
+    width:100%;padding:9px 10px;border-radius:8px;border:1px solid var(--border);
+    background:var(--surface-2);color:var(--text-primary);font-size:13.5px;font-family:inherit;
+  }
+  input[type="range"]{
+    -webkit-appearance:none;appearance:none;width:100%;height:24px;background:transparent;cursor:pointer;
+  }
+  input[type="range"]::-webkit-slider-runnable-track{height:6px;border-radius:3px;background:var(--track);}
+  input[type="range"]::-moz-range-track{height:6px;border-radius:3px;background:var(--track);}
+  input[type="range"]::-webkit-slider-thumb{
+    -webkit-appearance:none;appearance:none;margin-top:-7px;width:20px;height:20px;border-radius:50%;
+    background:var(--brand);border:3px solid var(--surface-1);box-shadow:0 0 0 1px var(--border);
+  }
+  input[type="range"]::-moz-range-thumb{
+    width:14px;height:14px;border-radius:50%;background:var(--brand);border:3px solid var(--surface-1);box-shadow:0 0 0 1px var(--border);
+  }
+  .seg{display:flex;border:1px solid var(--border);border-radius:8px;overflow:hidden;}
+  .seg button{flex:1;padding:8px 6px;background:var(--surface-2);border:none;font-size:12.5px;font-weight:600;color:var(--text-secondary);cursor:pointer;border-right:1px solid var(--border);}
+  .seg button:last-child{border-right:none;}
+  .seg button[aria-pressed="true"]{background:var(--brand-soft);color:var(--brand-strong);}
+  :root:not([data-theme="light"]) .seg button[aria-pressed="true"]{color:var(--brand);}
+
+  /* ---------- calculator layout ---------- */
+  .calc-grid{display:grid;grid-template-columns:340px 1fr;gap:20px;align-items:start;}
+  @media (max-width:920px){.calc-grid{grid-template-columns:1fr;}}
+  .sticky-form{position:sticky;top:106px;}
+  @media (max-width:920px){.sticky-form{position:static;}}
+
+  .hero-card{
+    background:linear-gradient(155deg, var(--surface-1) 0%, var(--surface-2) 100%);
+    border:1px solid var(--border);border-radius:var(--radius-lg);padding:22px 24px;box-shadow:var(--shadow-lg);
+    display:grid;grid-template-columns:1fr auto;gap:18px;align-items:center;margin-bottom:16px;
+  }
+  @media (max-width:640px){.hero-card{grid-template-columns:1fr;}}
+  .hero-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:6px;}
+  .hero-value{font-size:clamp(2.1rem,4.6vw,3rem);font-weight:800;letter-spacing:-0.02em;color:var(--brand);line-height:1;}
+  .hero-sub{font-size:13px;color:var(--text-secondary);margin-top:8px;font-variant-numeric:tabular-nums;}
+  .hero-secondary{display:flex;flex-direction:column;gap:10px;border-left:1px solid var(--border);padding-left:18px;min-width:170px;}
+  @media (max-width:640px){.hero-secondary{border-left:none;border-top:1px solid var(--border);padding-left:0;padding-top:14px;}}
+  .hero-secondary .row{display:flex;justify-content:space-between;gap:14px;font-size:12.5px;}
+  .hero-secondary .row .l{color:var(--text-muted);}
+  .hero-secondary .row .v{font-weight:700;font-variant-numeric:tabular-nums;}
+
+  .insight-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;}
+  .insight-grid .card{min-width:0;}
+
+  /* ---------- bar rows ---------- */
+  .barchart{display:flex;flex-direction:column;gap:9px;}
+  .barrow{display:grid;grid-template-columns:128px 1fr 64px;align-items:center;gap:10px;}
+  .barrow .lab{font-size:12px;color:var(--text-secondary);text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .barrow .track{height:20px;border-radius:0 5px 5px 0;background:var(--track);position:relative;overflow:hidden;}
+  .barrow .fill{height:100%;border-radius:0 5px 5px 0;}
+  .barrow .val{font-size:12px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--text-primary);}
+  .barrow.tight .lab{font-size:11.5px;}
+
+  /* ---------- meter ---------- */
+  .meter-wrap{margin:8px 0 4px;}
+  .meter{height:16px;border-radius:8px;background:var(--track);position:relative;overflow:hidden;border:1px solid var(--border);}
+  .meter .seg-fill{position:absolute;top:0;bottom:0;}
+  .meter-scale{display:flex;justify-content:space-between;font-size:10px;color:var(--text-muted);margin-top:4px;font-variant-numeric:tabular-nums;}
+  .legend-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:10px;}
+  .legend-item{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--text-secondary);}
+  .legend-dot{width:9px;height:9px;border-radius:2.5px;flex:0 0 auto;}
+  .legend-item.dim{opacity:.4;}
+
+  /* ---------- misc chips ---------- */
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;}
+  .chip{display:flex;align-items:center;gap:6px;font-size:12px;padding:5px 10px;border-radius:8px;background:var(--surface-2);border:1px solid var(--border);color:var(--text-secondary);}
+  .chip b{color:var(--text-primary);font-variant-numeric:tabular-nums;}
+
+  .divider{height:1px;background:var(--border);margin:18px 0;}
+
+  /* ---------- inventory search ---------- */
+  .search-bar{display:flex;gap:10px;margin-bottom:14px;}
+  .search-bar input{flex:1;}
+  .inv-table-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:var(--radius-md);}
+  table{border-collapse:collapse;width:100%;min-width:640px;font-size:12.5px;}
+  thead th{
+    text-align:left;font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--text-muted);
+    padding:9px 12px;border-bottom:1px solid var(--border);background:var(--surface-2);position:sticky;top:0;
+  }
+  tbody td{padding:9px 12px;border-bottom:1px solid var(--border);color:var(--text-secondary);}
+  tbody tr:last-child td{border-bottom:none;}
+  tbody tr:hover{background:var(--surface-2);}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;}
+  td.name{color:var(--text-primary);font-weight:600;max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+
+  /* ---------- model leaderboard ---------- */
+  .lead-row{display:grid;grid-template-columns:22px 1fr 90px 90px 60px;gap:10px;align-items:center;padding:9px 6px;border-bottom:1px solid var(--border);}
+  .lead-row:last-child{border-bottom:none;}
+  .lead-row.head{color:var(--text-muted);font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;}
+  .lead-row .rank{font-family:var(--font-mono);font-size:11px;color:var(--text-muted);}
+  .lead-row .name{font-weight:700;font-size:13px;display:flex;align-items:center;gap:8px;}
+  .lead-row .metric{font-variant-numeric:tabular-nums;font-size:12.5px;text-align:right;color:var(--text-secondary);}
+  .lead-row.picked{background:var(--brand-soft);border-radius:8px;}
+  .lead-row.picked .name{color:var(--brand-strong);}
+  :root:not([data-theme="light"]) .lead-row.picked .name{color:var(--brand);}
+
+  /* ---------- hypothesis cards ---------- */
+  .hypo-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;}
+  .hypo-card{border:1px solid var(--border);border-radius:var(--radius-md);padding:16px;background:var(--surface-2);}
+  .hypo-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:8px;}
+  .hypo-id{font-family:var(--font-mono);font-size:11px;color:var(--text-muted);}
+  .hypo-stat{display:flex;gap:16px;margin:10px 0;}
+  .hypo-stat div{display:flex;flex-direction:column;}
+  .hypo-stat .l{font-size:10.5px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.04em;}
+  .hypo-stat .v{font-family:var(--font-mono);font-size:14px;font-weight:700;}
+  .hypo-text{font-size:12.5px;color:var(--text-secondary);}
+
+  /* ---------- funnel ---------- */
+  .funnel{display:flex;align-items:stretch;gap:0;overflow-x:auto;}
+  .funnel-step{flex:1;min-width:150px;padding:14px 16px;border:1px solid var(--border);position:relative;background:var(--surface-2);}
+  .funnel-step:not(:first-child){border-left:none;}
+  .funnel-step:first-child{border-radius:10px 0 0 10px;}
+  .funnel-step:last-child{border-radius:0 10px 10px 0;}
+  .funnel-step .n{font-size:19px;font-weight:800;font-variant-numeric:tabular-nums;}
+  .funnel-step .l{font-size:11px;color:var(--text-muted);margin-top:2px;}
+  .funnel-arrow{display:flex;align-items:center;color:var(--text-muted);padding:0 4px;font-size:14px;}
+
+  /* ---------- scenario cards ---------- */
+  .scenario{border:1px solid var(--border);border-radius:var(--radius-lg);background:var(--surface-1);margin-bottom:20px;overflow:hidden;box-shadow:var(--shadow-sm);}
+  .scenario-head{padding:20px 22px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:flex-start;border-bottom:1px solid var(--border);background:var(--surface-2);}
+  .scenario-num{font-family:var(--font-mono);font-size:12px;color:var(--brand);font-weight:700;letter-spacing:.04em;}
+  .scenario-title{font-size:17px;margin-top:4px;}
+  .scenario-persona{font-size:12.5px;color:var(--text-secondary);margin-top:6px;max-width:560px;}
+  .scenario-body{padding:20px 22px;}
+  .steps{display:flex;flex-direction:column;gap:0;}
+  .step{display:grid;grid-template-columns:28px 1fr;gap:14px;padding-bottom:18px;position:relative;}
+  .step:last-child{padding-bottom:0;}
+  .step-dot{width:28px;height:28px;border-radius:50%;background:var(--brand-soft);color:var(--brand-strong);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px;font-family:var(--font-mono);z-index:1;}
+  :root:not([data-theme="light"]) .step-dot{color:var(--brand);}
+  .step:not(:last-child)::before{content:"";position:absolute;left:13px;top:28px;bottom:0;width:1px;background:var(--border);}
+  .step-title{font-weight:700;font-size:13.5px;margin-bottom:3px;}
+  .step-desc{font-size:12.5px;color:var(--text-secondary);}
+  .outcome-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:18px;padding-top:18px;border-top:1px dashed var(--border);}
+  .outcome{display:flex;flex-direction:column;gap:2px;}
+  .outcome .l{font-size:10.5px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.04em;}
+  .outcome .v{font-size:16px;font-weight:800;font-variant-numeric:tabular-nums;}
+  .outcome .v.good{color:var(--good);}
+
+  svg.chart{width:100%;height:auto;display:block;overflow:visible;}
+  .chart-axis text{fill:var(--text-muted);font-size:10px;font-family:var(--font-sans);}
+  .chart-grid line{stroke:var(--gridline);stroke-width:1;}
+  .chart-line{fill:none;stroke:var(--series-1);stroke-width:2;stroke-linejoin:round;stroke-linecap:round;}
+  .chart-area{fill:var(--series-1);opacity:.1;}
+  .chart-marker{fill:var(--brand);stroke:var(--surface-1);stroke-width:2;}
+  .chart-marker-label{fill:var(--text-primary);font-size:11px;font-weight:700;}
+
+  .footnote{font-size:11.5px;color:var(--text-muted);line-height:1.6;}
+  footer.site{max-width:1320px;margin:40px auto 0;padding:20px;border-top:1px solid var(--border);color:var(--text-muted);font-size:11.5px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+
+  @media (prefers-reduced-motion: reduce){*{transition:none !important;animation:none !important;}}
+</style>
+
+<div class="masthead">
+  <div class="masthead-inner">
+    <div class="brand">
+      <div class="brand-mark">AB</div>
+      <div class="brand-text">
+        <span class="brand-name">AutoBridge AI</span>
+        <span class="brand-tag">인도 소싱 매입가 · AI 입찰 콘솔</span>
+      </div>
+    </div>
+    <div class="kpi-strip">
+      <div class="kpi"><span class="k-label">분석 표본</span><span class="k-value num">7,253건</span></div>
+      <div class="kpi"><span class="k-label">대기 재고</span><span class="k-value num">1,053건</span></div>
+      <div class="kpi"><span class="k-label">채택 모델</span><span class="k-value">LightGBM</span></div>
+      <div class="kpi"><span class="k-label">CV R²</span><span class="k-value accent num">0.859</span></div>
+      <div class="kpi"><span class="k-label">평균 목표마진</span><span class="k-value accent num">14.9%</span></div>
+    </div>
+  </div>
+  <div class="tabbar" role="tablist" aria-label="주요 화면 전환">
+    <button class="tabbtn" role="tab" aria-selected="true" id="tabbtn-calc" data-tab="calc"><span class="tag">01</span>입찰가 계산기</button>
+    <button class="tabbtn" role="tab" aria-selected="false" id="tabbtn-insight" data-tab="insight"><span class="tag">02</span>예측 근거 · 모델 인사이트</button>
+    <button class="tabbtn" role="tab" aria-selected="false" id="tabbtn-scenario" data-tab="scenario"><span class="tag">03</span>딜러 사용 시나리오</button>
+  </div>
+</div>
+
+<div class="app">
+
+  <!-- ===================== TAB 1 : CALCULATOR ===================== -->
+  <section class="tabpanel active" id="tab-calc" role="tabpanel" aria-labelledby="tabbtn-calc">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Bid Price Calculator</div>
+        <h2>현장 매입가 계산기</h2>
+        <p class="section-sub">차량 제원을 입력하면 학습된 회귀 모델의 실제 세그먼트 중앙값 곡선을 조합한 근사 엔진이 예상 판매가와 권장 입찰가를 즉시 계산합니다. 리스크(고연식·고주행·다회 소유)는 실제 운영 규칙과 동일하게 자동 반영됩니다.</p>
+      </div>
+      <span class="badge badge-neutral" id="calc-mode-badge">근사 추정 모드</span>
+    </div>
+
+    <div class="calc-grid">
+      <!-- input form -->
+      <div class="sticky-form">
+        <div class="card" style="margin-bottom:16px;">
+          <div class="card-title">① 대기 재고에서 불러오기</div>
+          <div class="card-desc">실제 예측 파이프라인이 처리한 1,053건의 미입찰 재고를 검색해 실측값을 불러옵니다.</div>
+          <div class="search-bar">
+            <input type="text" id="inv-search" placeholder="차종명 또는 지역 검색 (예: Swift, Delhi)" autocomplete="off">
+          </div>
+          <div id="inv-results" style="display:flex;flex-direction:column;gap:6px;max-height:220px;overflow-y:auto;"></div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">② 차량 제원 직접 입력</div>
+          <div class="card-desc">슬라이더를 조정하면 오른쪽 결과가 실시간으로 재계산됩니다.</div>
+
+          <div class="field">
+            <label>지역(Location) <span class="fv" id="lb-loc"></span></label>
+            <select id="in-loc"></select>
+          </div>
+
+          <div class="field">
+            <label>차량 연식(Age) <span class="fv"><span id="lb-age">4</span>년</span></label>
+            <input type="range" id="in-age" min="0" max="18" step="1" value="4">
+          </div>
+
+          <div class="field">
+            <label>누적 주행거리 <span class="fv"><span id="lb-km">42,000</span>km</span></label>
+            <input type="range" id="in-km" min="0" max="180000" step="1000" value="42000">
+          </div>
+
+          <div class="field">
+            <label>엔진 출력(Power) <span class="fv"><span id="lb-power">94</span>bhp</span></label>
+            <input type="range" id="in-power" min="35" max="400" step="1" value="94">
+          </div>
+
+          <div class="field">
+            <label>배기량(Engine) <span class="fv"><span id="lb-engine">1,493</span>cc</span></label>
+            <input type="range" id="in-engine" min="600" max="4000" step="10" value="1493">
+          </div>
+
+          <div class="field">
+            <label>연비(Mileage) <span class="fv"><span id="lb-mileage">18.2</span>kmpl</span></label>
+            <input type="range" id="in-mileage" min="6" max="32" step="0.1" value="18.2">
+          </div>
+
+          <div class="field">
+            <label>연료 타입</label>
+            <div class="seg" id="in-fuel" data-value="Petrol">
+              <button type="button" data-v="Petrol" aria-pressed="true">휘발유</button>
+              <button type="button" data-v="Diesel" aria-pressed="false">경유</button>
+              <button type="button" data-v="CNG" aria-pressed="false">CNG</button>
+              <button type="button" data-v="Electric" aria-pressed="false">전기</button>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>변속기</label>
+            <div class="seg" id="in-trans" data-value="Manual">
+              <button type="button" data-v="Manual" aria-pressed="true">수동</button>
+              <button type="button" data-v="Automatic" aria-pressed="false">자동</button>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>소유 이력</label>
+            <div class="seg" id="in-owner" data-value="First">
+              <button type="button" data-v="First" aria-pressed="true">1인</button>
+              <button type="button" data-v="Second" aria-pressed="false">2인</button>
+              <button type="button" data-v="Third" aria-pressed="false">3인</button>
+              <button type="button" data-v="Fourth & Above" aria-pressed="false">4인+</button>
+            </div>
+          </div>
+
+          <div class="field" style="margin-bottom:0;">
+            <label>좌석 수</label>
+            <select id="in-seats">
+              <option>2</option><option>4</option><option selected>5</option><option>6</option><option>7</option><option>8</option>
+            </select>
+          </div>
+
+          <button class="btn" id="btn-reset" style="width:100%;justify-content:center;margin-top:6px;">기본값으로 초기화</button>
+        </div>
+      </div>
+
+      <!-- results -->
+      <div>
+        <div class="hero-card">
+          <div>
+            <div class="hero-label">권장 입찰가(Bid Price)</div>
+            <div class="hero-value num" id="out-bid">-</div>
+            <div class="hero-sub" id="out-bid-sub">-</div>
+          </div>
+          <div class="hero-secondary">
+            <div class="row"><span class="l">AI 예상 판매가</span><span class="v num" id="out-pred">-</span></div>
+            <div class="row"><span class="l">목표 마진율</span><span class="v num" id="out-margin">-</span></div>
+            <div class="row"><span class="l">예상 마진 총액</span><span class="v num" id="out-marginwon">-</span></div>
+            <div class="row"><span class="l">참조 재고 ID</span><span class="v num mono" id="out-ref">CUSTOM</span></div>
+          </div>
+        </div>
+
+        <div id="real-compare" class="card" style="display:none;margin-bottom:16px;border-color:var(--brand);">
+          <div class="card-title">🔎 근사식 자체 점검 <span style="font-weight:500;color:var(--text-muted);">(모델 정확도 아님)</span></div>
+          <div class="card-desc">항목에 마우스를 올리면 설명이 뜹니다 · 정확도는 <a href="#" id="jump-insight" style="color:var(--accent-2);">예측 근거 탭</a> 참고</div>
+          <div class="chips" id="compare-chips"></div>
+          <p class="footnote" id="compare-note" style="margin-top:0;"></p>
+        </div>
+
+        <div class="insight-grid" style="margin-bottom:16px;">
+          <div class="card">
+            <div class="card-title">매입 목표마진 구성 근거</div>
+            <div class="card-desc">기본 마진에 재고 리스크(고연식·고주행·다회 소유)가 가산되는 구조를 실제 운영 규칙 그대로 시각화합니다.</div>
+            <div class="meter-wrap">
+              <div class="meter" id="margin-meter"></div>
+              <div class="meter-scale"><span>0%</span><span>12%</span><span>18%</span><span>21%</span><span>25%</span></div>
+            </div>
+            <div class="legend-row" id="margin-legend"></div>
+          </div>
+
+          <div class="card">
+            <div class="card-title">가격 결정 근거 (변수 중요도)</div>
+            <div class="card-desc">CV 최적 모델의 SHAP 중요도 상위 변수 · 현재 입력값을 함께 표기</div>
+            <div class="barchart" id="chart-shap"></div>
+          </div>
+        </div>
+
+        <div class="insight-grid" style="margin-bottom:16px;">
+          <div class="card">
+            <div class="card-head" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+              <div>
+                <div class="card-title">감가 곡선 대비 현재 위치</div>
+                <div class="card-desc" style="margin-bottom:0;">실거래 중앙값(Price) 기준 · 표식 = 입력한 차량</div>
+              </div>
+              <div class="seg" id="curve-toggle" data-value="age" style="width:150px;flex:0 0 auto;">
+                <button type="button" data-v="age" aria-pressed="true">연식</button>
+                <button type="button" data-v="km" aria-pressed="false">주행거리</button>
+              </div>
+            </div>
+            <div id="chart-curve"></div>
+          </div>
+
+          <div class="card">
+            <div class="card-title">지역별 매입가 중앙값 비교</div>
+            <div class="card-desc">EDA 기준 11개 도시 실거래 중앙값 · 강조 = 선택 지역</div>
+            <div class="barchart" id="chart-location"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== TAB 2 : INSIGHTS ===================== -->
+  <section class="tabpanel" id="tab-insight" role="tabpanel" aria-labelledby="tabbtn-insight">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Model Insights</div>
+        <h2>예측 근거 · 모델 인사이트 대시보드</h2>
+        <p class="section-sub">지역 소득 데이터와 중고차 거래 데이터를 병합해 7개 회귀/트리 모델을 5-fold 교차검증으로 비교했고, 통계적 가설검정으로 가격결정 요인을 검증했습니다.</p>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:16px;">
+      <div class="card-title">데이터 파이프라인</div>
+      <div class="card-desc">원본 수집부터 입찰 대상 산출까지의 표본 흐름</div>
+      <div class="funnel">
+        <div class="funnel-step"><div class="n num">7,253</div><div class="l">원본 매입 기록</div></div>
+        <div class="funnel-arrow">→</div>
+        <div class="funnel-step"><div class="n num">7,253 × 29</div><div class="l">지역소득 병합 후 컬럼</div></div>
+        <div class="funnel-arrow">→</div>
+        <div class="funnel-step"><div class="n num">6,200</div><div class="l">가격 학습 표본</div></div>
+        <div class="funnel-arrow">→</div>
+        <div class="funnel-step"><div class="n num">1,053</div><div class="l">입찰 대상(미확정가)</div></div>
+      </div>
+    </div>
+
+    <div class="insight-grid" style="margin-bottom:16px;">
+      <div class="card">
+        <div class="card-title">모델 성능 리더보드 (5-fold CV)</div>
+        <div class="card-desc">로그가격 학습 → 지수변환 복원 후 비교 · 최종 채택: LightGBM</div>
+        <div class="lead-row head">
+          <span></span><span>모델</span><span class="metric">R² (CV)</span><span class="metric">RMSE (CV)</span><span class="metric">과적합 갭</span>
+        </div>
+        <div id="leaderboard"></div>
+      </div>
+      <div class="card">
+        <div class="card-title">모델별 설명력(R², CV) 비교</div>
+        <div class="card-desc">교차검증 결정계수가 높을수록 미확정 재고 예측에 유리</div>
+        <div class="barchart" id="chart-models"></div>
+      </div>
+    </div>
+
+    <div class="insight-grid" style="margin-bottom:16px;">
+      <div class="card">
+        <div class="card-title">변수 중요도 · Permutation Importance</div>
+        <div class="card-desc">해당 변수를 무작위로 섞었을 때 성능이 얼마나 떨어지는지로 측정</div>
+        <div class="barchart" id="chart-perm"></div>
+      </div>
+      <div class="card">
+        <div class="card-title">변수 중요도 · SHAP Summary</div>
+        <div class="card-desc">개별 예측 기여도를 평균 절대값으로 집계</div>
+        <div class="barchart" id="chart-shap2"></div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:16px;">
+      <div class="section-head" style="margin-bottom:10px;">
+        <div>
+          <div class="card-title" style="font-size:15px;">가설 검증 결과 (유의수준 α = 0.05)</div>
+          <div class="card-desc" style="margin-bottom:0;">회귀계수 · Robust SE(HC3) 기준 p-value</div>
+        </div>
+      </div>
+      <div class="hypo-grid" id="hypo-grid"></div>
+    </div>
+
+    <div class="insight-grid" style="margin-bottom:16px;">
+      <div class="card">
+        <div class="card-title">연식(Age) 구간별 실거래 중앙값</div>
+        <div class="card-desc">0-3년 대비 10년 초과 시 약 -43.0% 비선형 급락 구간 확인</div>
+        <div class="barchart" id="chart-age-eda"></div>
+      </div>
+      <div class="card">
+        <div class="card-title">소유 이력(Owner)별 실거래 중앙값</div>
+        <div class="card-desc">1인 소유 대비 2인 이상부터 유의한 하락(p=6.2e-08)</div>
+        <div class="barchart" id="chart-owner-eda"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">모델 채택 사유 및 한계</div>
+      <div class="footnote">
+        LightGBM은 5-fold 교차검증 R²(0.859)·RMSE(약 664만원)로 7개 후보 중 최고 성능을 기록해 최종 채택되었습니다. 다만 학습 R²(0.941) 대비 과적합 갭이 35.4%p로 큰 편이라, 운영 시에는 정기 재학습·검증셋 모니터링을 병행합니다.
+        지역 소득지수(KRW)는 p=0.00393로 유의하지만 지역 더미와의 다중공선성이 있어 단독 계수 해석에는 주의가 필요합니다. 연비(Mileage) 계수는 음(-) 방향으로 유의(p=3.3e-10)하게 나타났는데, 이는 고연비 차량이 소형·저가 세그먼트와 상관되는 다중공선성 효과일 가능성이 있어 액면 그대로 "고연비=고가"로 해석하지 않습니다.
+        본 데모의 "직접 입력" 계산기는 실제 운영망의 LightGBM 파이프라인 대신, 위 EDA 구간 중앙값을 결합한 경량 근사식을 사용합니다 — 실제 서비스에서는 학습된 모델 API를 호출합니다.
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== TAB 3 : SCENARIOS ===================== -->
+  <section class="tabpanel" id="tab-scenario" role="tabpanel" aria-labelledby="tabbtn-scenario">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">Field Playbook</div>
+        <h2>딜러 사용 시나리오</h2>
+        <p class="section-sub">실제 재고 데이터 3건을 기반으로, 딜러가 현장·사무실에서 AutoBridge AI를 어떻게 활용하는지 단계별로 재구성했습니다. 각 시나리오는 계산기에 바로 재현할 수 있습니다.</p>
+      </div>
+    </div>
+
+    <div class="scenario">
+      <div class="scenario-head">
+        <div>
+          <div class="scenario-num">SCENARIO 01 · 현장 즉시 매입 판단</div>
+          <h3 class="scenario-title">경매장에서 3분 만에 입찰가 확정하기</h3>
+          <p class="scenario-persona">코친(Kochi) 지역 딜러 라비(가상 인물)가 경매장에서 2019년식 Hyundai i20 1.4 Sportz(주행 17,964km)를 발견했습니다. 표준적인 저위험 매물의 빠른 회전이 목표입니다.</p>
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="loadScenario(0)">이 시나리오 계산기에 재현 →</button>
+      </div>
+      <div class="scenario-body">
+        <div class="steps">
+          <div class="step"><div class="step-dot">1</div><div><div class="step-title">현장에서 차량명 검색</div><div class="step-desc">태블릿에서 "i20"을 검색해 대기 재고 목록에서 동일 차종의 실측 예측 이력을 즉시 확인합니다.</div></div></div>
+          <div class="step"><div class="step-dot">2</div><div><div class="step-title">AI 예상 판매가 확인</div><div class="step-desc">모델이 예상 재판매가 <b>1,472만원</b>을 제시 — 연식·주행거리·출력 등 변수 조합의 결과입니다.</div></div></div>
+          <div class="step"><div class="step-dot">3</div><div><div class="step-title">근거 차트로 리스크 점검</div><div class="step-desc">연식 4년·주행 17,964km는 감가 급락 구간(7년·80,000km) 이전이라 목표마진은 기본값 12%만 적용됩니다.</div></div></div>
+          <div class="step"><div class="step-dot">4</div><div><div class="step-title">입찰가 제시 및 매입</div><div class="step-desc">권장 입찰가 <b>1,295만원</b>을 그 자리에서 판매자에게 제시, 협상 데드라인을 단축합니다.</div></div></div>
+        </div>
+        <div class="outcome-strip">
+          <div class="outcome"><span class="l">AI 예상 판매가</span><span class="v num">14,716,459원</span></div>
+          <div class="outcome"><span class="l">권장 입찰가</span><span class="v num">12,950,484원</span></div>
+          <div class="outcome"><span class="l">목표 마진율</span><span class="v num good">12.0%</span></div>
+          <div class="outcome"><span class="l">현장 의사결정 시간</span><span class="v num good">약 3분</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="scenario">
+      <div class="scenario-head">
+        <div>
+          <div class="scenario-num">SCENARIO 02 · 고위험 재고 리스크 조정</div>
+          <h3 class="scenario-title">노후 차량, 마진을 자동으로 방어하기</h3>
+          <p class="scenario-persona">델리(Delhi) 딜러가 2011년식 Toyota Innova 2.5 GX 8 STR(주행 53,138km, 3인 이상 소유)을 감정합니다. 연식이 9년으로 비선형 감가 임계값(7년)을 이미 넘겼습니다.</p>
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="loadScenario(1)">이 시나리오 계산기에 재현 →</button>
+      </div>
+      <div class="scenario-body">
+        <div class="steps">
+          <div class="step"><div class="step-dot">1</div><div><div class="step-title">제원 입력</div><div class="step-desc">연식 9년, 주행 53,138km, 소유이력 3인 이상을 계산기에 입력합니다.</div></div></div>
+          <div class="step"><div class="step-dot">2</div><div><div class="step-title">리스크 플래그 자동 감지</div><div class="step-desc">"연식 &gt; 7년" 플래그와 "소유이력 ≥ 3인" 플래그가 동시에 켜지며 마진 구성 차트에 가산 구간이 표시됩니다.</div></div></div>
+          <div class="step"><div class="step-dot">3</div><div><div class="step-title">목표마진 자동 상향</div><div class="step-desc">기본 12% + 연식/주행 리스크 6%p + 소유이력 리스크 3%p = <b>21%</b>로 자동 조정되어 사람이 규정을 암기할 필요가 없습니다.</div></div></div>
+          <div class="step"><div class="step-dot">4</div><div><div class="step-title">보수적 입찰가로 손실 방어</div><div class="step-desc">예상 판매가 1,003만원 대비 입찰가를 792만원으로 낮춰 재고 손실 리스크를 흡수합니다.</div></div></div>
+        </div>
+        <div class="outcome-strip">
+          <div class="outcome"><span class="l">AI 예상 판매가</span><span class="v num">10,025,694원</span></div>
+          <div class="outcome"><span class="l">권장 입찰가</span><span class="v num">7,920,298원</span></div>
+          <div class="outcome"><span class="l">목표 마진율</span><span class="v num">21.0%</span></div>
+          <div class="outcome"><span class="l">방어된 마진 총액</span><span class="v num good">+210만원</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="scenario">
+      <div class="scenario-head">
+        <div>
+          <div class="scenario-num">SCENARIO 03 · 지역 간 소싱 최적화</div>
+          <h3 class="scenario-title">같은 차, 다른 도시 — 어디서 더 벌 수 있나</h3>
+          <p class="scenario-persona">본사 소싱 매니저가 Maruti Swift Dzire 동일 트림을 4개 도시(코임바토레·하이데라바드·첸나이·콜카타)에서 비교해 다음 분기 매입 지역 우선순위를 정합니다. 지역 소득지수-가격 상관계수는 r=0.393.</p>
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="loadScenario(2)">이 시나리오 계산기에 재현 →</button>
+      </div>
+      <div class="scenario-body">
+        <div class="steps">
+          <div class="step"><div class="step-dot">1</div><div><div class="step-title">동일 모델 다지역 검색</div><div class="step-desc">"Swift Dzire"로 재고를 검색해 여러 도시의 실측 예측가를 한 화면에서 비교합니다.</div></div></div>
+          <div class="step"><div class="step-dot">2</div><div><div class="step-title">지역 비교 차트 확인</div><div class="step-desc">지역별 매입가 중앙값 차트에서 코임바토레가 최상위(1,293만원), 콜카타가 최하위(583만원) 권역임을 즉시 확인합니다.</div></div></div>
+          <div class="step"><div class="step-dot">3</div><div><div class="step-title">동일 조건 매물 대조</div><div class="step-desc">연식·주행거리가 비슷한 4대의 실측 예측가를 나란히 비교해 지역 효과만 분리해 봅니다.</div></div></div>
+          <div class="step"><div class="step-dot">4</div><div><div class="step-title">소싱 우선순위 재배치</div><div class="step-desc">다음 분기 매입 예산을 고소득·고가 지역(코임바토레·벵갈루루·코친) 중심으로 재배분합니다.</div></div></div>
+        </div>
+        <div class="outcome-strip">
+          <div class="outcome"><span class="l">코임바토레 (2016형)</span><span class="v num">10,030,199원</span></div>
+          <div class="outcome"><span class="l">하이데라바드 (2017형)</span><span class="v num">10,797,796원</span></div>
+          <div class="outcome"><span class="l">첸나이 (2015형)</span><span class="v num">7,066,308원</span></div>
+          <div class="outcome"><span class="l">콜카타 (2015형)</span><span class="v num">7,085,297원</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer class="site">
+  <span>AutoBridge AI — analysis.ipynb 기반 매입가 예측 데모 콘솔. 실제 화폐 단위는 원화(KRW) 환산 기준이며 시연 목적의 근사치를 포함합니다.</span>
+  <span class="mono">build 2026.08.13</span>
+</footer>
+
+<script>
+"use strict";
+/* ================= embedded analysis output (analysis_summary.json 발췌) ================= */
+const ANALYSIS = {
+  models: [
+    {name:"LightGBM", r2:0.8587, rmse:6643920, mae:2502946, overfit:35.4, picked:true},
+    {name:"XGBoost", r2:0.8405, rmse:7057684, mae:2594780, overfit:42.6, picked:false},
+    {name:"CatBoost", r2:0.8302, rmse:7283484, mae:2819145, overfit:23.4, picked:false},
+    {name:"RandomForest", r2:0.8281, rmse:7326524, mae:2765067, overfit:40.9, picked:false},
+    {name:"GradientBoosting", r2:0.8271, rmse:7349478, mae:2979677, overfit:16.7, picked:false},
+    {name:"Ridge", r2:0.5421, rmse:11958488, mae:4139092, overfit:2.7, picked:false},
+    {name:"OLS", r2:0.5371, rmse:12024400, mae:4106605, overfit:3.4, picked:false}
+  ],
+  perm: [
+    {label:"엔진 출력(Power_bhp)", key:"power", value:0.6143},
+    {label:"차량 연식(Age)", key:"age", value:0.3480},
+    {label:"배기량(Engine_cc)", key:"engine", value:0.1128},
+    {label:"지역효과 · 첸나이", key:null, value:0.0499},
+    {label:"지역효과 · 아마다바드", key:null, value:0.0312},
+    {label:"연비(Mileage)", key:"mileage", value:0.0311},
+    {label:"누적 주행거리(km)", key:"km", value:0.0300},
+    {label:"지역효과 · 벵갈루루", key:null, value:0.0239},
+    {label:"지역 소득지수(KRW)", key:null, value:0.0103},
+    {label:"좌석 수", key:null, value:0.0039}
+  ],
+  shap: [
+    {label:"엔진 출력(Power_bhp)", key:"power", value:0.3927},
+    {label:"차량 연식(Age)", key:"age", value:0.2771},
+    {label:"변속기 · 자동", key:null, value:0.1093},
+    {label:"배기량(Engine_cc)", key:"engine", value:0.1018},
+    {label:"누적 주행거리(km)", key:"km", value:0.0553},
+    {label:"연비(Mileage)", key:"mileage", value:0.0396},
+    {label:"연료 · 휘발유", key:null, value:0.0370},
+    {label:"지역효과 · 하이데라바드", key:null, value:0.0256},
+    {label:"연료 · 경유", key:null, value:0.0251},
+    {label:"지역효과 · 코임바토레", key:null, value:0.0202}
+  ],
+  hypothesis: [
+    {id:"H1", title:"지역 소득수준(KRW)의 가격 영향", p:0.00393, coef:-0.0000326, accept:true,
+     text:"통계적으로 유의(p<0.01). 다만 지역 더미와 다중공선성이 있어 단독 계수의 방향성 해석은 보조지표로만 사용합니다."},
+    {id:"H2", title:"거래 지역(Location) 고유 효과", p:6.7e-80, coef:null, accept:true,
+     text:"지역 더미 변수들의 결합 유의성이 극히 강함(p≈0). 동일 차종도 지역에 따라 매입가를 달리 책정해야 합니다."},
+    {id:"H3", title:"주행거리·연식의 비선형 감가", p:2.09e-19, coef:null, accept:true,
+     text:"주행거리 80,000km 임계값 상호작용항이 유의(p<0.001). 임계값 이후 감가 기울기가 뚜렷하게 가팔라집니다."},
+    {id:"H4", title:"소유 이력·연비의 가격 영향", p:6.24e-8, coef:-0.0651, accept:true,
+     text:"1인 소유 대비 다회 소유는 유의하게 저가(p<0.001). 연비 계수는 음(-)이며 세그먼트 혼입 가능성에 유의해 해석합니다."}
+  ],
+  eda: {
+    locMedian: {Coimbatore:12930515, Bangalore:10500780, Kochi:10332150, Ahmedabad:9197760, Hyderabad:9167100, Mumbai:9121110, Delhi:8645890, Chennai:7105270, Pune:6668380, Jaipur:6515080, Kolkata:5825250},
+    ageCurve: [[1.5,13229440],[4.5,10270830],[6.5,8431280],[9,6055190],[13,3449160]],
+    ageBinLabel: ["0-3y","4-5y","6-7y","8-10y","10y+"],
+    ageBinX: [1.5,4.5,6.5,9,13],
+    kmCurve: [[10000,11037310],[35000,9749630],[65000,7971390],[100000,7204910],[150000,6898320]],
+    kmBinLabel: ["<20k","20-50k","50-80k","80-120k","120k+"],
+    kmBinX: [10000,35000,65000,100000,150000],
+    ownerMedian: {"1인 소유":9197760, "2인 소유":6653050, "3인 소유":4062340, "4인 이상":4598880},
+    krwPriceCorr: 0.393
+  },
+  imputeMedians: {km:53416, mileage:18.2, engine:1493, power:94, seats:5},
+  bidReport: {n:1053, predMedian:7758878, bidMedian:6675668, marginMean:0.1494}
+};
+
+/* ================= embedded inventory (bid_price_predictions.csv → 1,053 rows) ================= */
+/* fields: n=차종명, l=지역, y=연식(등록연도), k=주행거리(km), p=AI 예상판매가(원), m=목표마진율, b=권장입찰가(원) */
+const BIDS = [{"n":"Maruti Alto K10 LXI CNG","l":"Delhi","y":2014,"k":40929,"p":4883065,"m":0.12,"b":4297097},{"n":"Maruti Alto 800 2016-2019 LXI","l":"Coimbatore","y":2013,"k":54493,"p":4099470,"m":0.12,"b":3607534},{"n":"Toyota Etios Liva GD","l":"Hyderabad","y":2012,"k":139000,"p":7329374,"m":0.18,"b":6010087},{"n":"Hyundai i20 Magna","l":"Mumbai","y":2014,"k":29000,"p":6399461,"m":0.12,"b":5631526},{"n":"Mahindra XUV500 W8 2WD","l":"Coimbatore","y":2016,"k":85609,"p":18210733,"m":0.18,"b":14932801},{"n":"Toyota Fortuner 4x2 AT TRD Sportivo","l":"Pune","y":2015,"k":59000,"p":32670487,"m":0.12,"b":28750028},{"n":"Hyundai EON Era Plus","l":"Jaipur","y":2013,"k":65000,"p":3376731,"m":0.12,"b":2971524},{"n":"Honda City 1.5 S MT","l":"Mumbai","y":2011,"k":66000,"p":5273823,"m":0.18,"b":4324535},{"n":"Mahindra XUV500 W6 2WD","l":"Coimbatore","y":2015,"k":54684,"p":17089327,"m":0.12,"b":15038608},{"n":"Audi Q5 2008-2012 2.0 TDI","l":"Mumbai","y":2012,"k":78000,"p":24980787,"m":0.18,"b":20484246},{"n":"Hyundai Grand i10 Magna","l":"Jaipur","y":2016,"k":21000,"p":7530770,"m":0.12,"b":6627078},{"n":"Toyota Corolla H5","l":"Chennai","y":2007,"k":90000,"p":3498153,"m":0.21,"b":2763541},{"n":"Maruti Swift Vdi BSIII","l":"Coimbatore","y":2008,"k":87628,"p":5348106,"m":0.18,"b":4385447},{"n":"Nissan Terrano XL","l":"Mumbai","y":2014,"k":45000,"p":7263667,"m":0.12,"b":6392027},{"n":"BMW X1 sDrive20d","l":"Coimbatore","y":2013,"k":30788,"p":27419523,"m":0.12,"b":24129180},{"n":"BMW 3 Series GT 320d Luxury Line","l":"Hyderabad","y":2015,"k":39524,"p":43590956,"m":0.12,"b":38360041},{"n":"Ford Ikon 1.4 TDCi DuraTorq","l":"Chennai","y":2009,"k":140000,"p":2508103,"m":0.18,"b":2056644},{"n":"Maruti Swift AMT ZXI","l":"Kochi","y":2019,"k":15409,"p":10453568,"m":0.12,"b":9199139},{"n":"Maruti Swift Dzire VXi","l":"Jaipur","y":2015,"k":36502,"p":8053028,"m":0.12,"b":7086664},{"n":"Maruti Ritz LDi","l":"Pune","y":2016,"k":200000,"p":5958981,"m":0.18,"b":4886365},{"n":"Nissan Micra XV","l":"Delhi","y":2010,"k":70000,"p":3131510,"m":0.18,"b":2567838},{"n":"Maruti Alto 800 2016-2019 LXI","l":"Kochi","y":2017,"k":36701,"p":5538147,"m":0.12,"b":4873570},{"n":"Skoda Laura 1.8 TSI Ambition","l":"Bangalore","y":2009,"k":72000,"p":5598617,"m":0.18,"b":4590866},{"n":"Honda Civic 2010-2013 1.8 S MT Inspire","l":"Bangalore","y":2011,"k":40000,"p":7459243,"m":0.18,"b":6116579},{"n":"Ford Ikon 1.3 Flair","l":"Pune","y":2005,"k":47000,"p":1249717,"m":0.18,"b":1024768},{"n":"Maruti Alto LX","l":"Pune","y":2006,"k":93500,"p":1494069,"m":0.18,"b":1225136},{"n":"Honda Jazz 1.5 V i DTEC","l":"Pune","y":2015,"k":52000,"p":9470616,"m":0.12,"b":8334142},{"n":"Skoda Rapid 1.5 TDI AT Ambition","l":"Delhi","y":2015,"k":55429,"p":10824046,"m":0.12,"b":9525160},{"n":"Hyundai i20 1.2 Sportz","l":"Mumbai","y":2011,"k":133000,"p":4117813,"m":0.18,"b":3376606},{"n":"Volkswagen Polo GT TDI","l":"Pune","y":2014,"k":68000,"p":8107343,"m":0.12,"b":7134462},{"n":"Hyundai i10 Era 1.1 iTech SE","l":"Pune","y":2010,"k":71000,"p":3280510,"m":0.18,"b":2690018},{"n":"Mitsubishi Pajero 2.8 SFX","l":"Chennai","y":2012,"k":121000,"p":16676931,"m":0.18,"b":13675084},{"n":"Maruti Swift Dzire Tour LDI","l":"Kolkata","y":2015,"k":107000,"p":6137974,"m":0.18,"b":5033138},{"n":"Maruti Swift Dzire VXI","l":"Chennai","y":2015,"k":51000,"p":7066308,"m":0.12,"b":6218351},{"n":"Hyundai Creta 1.6 SX Plus Dual Tone Petrol","l":"Bangalore","y":2016,"k":13000,"p":16942005,"m":0.12,"b":14908964},{"n":"Toyota Innova 2.5 G (Diesel) 7 Seater BS IV","l":"Pune","y":2010,"k":81000,"p":9711020,"m":0.18,"b":7963036},{"n":"Maruti Baleno Alpha 1.3","l":"Ahmedabad","y":2018,"k":32000,"p":10927722,"m":0.12,"b":9616395},{"n":"Audi A4 2.0 TDI 177 Bhp Technology Edition","l":"Pune","y":2013,"k":87001,"p":24042298,"m":0.18,"b":19714684},{"n":"Audi A4 2.0 TDI Multitronic","l":"Hyderabad","y":2013,"k":55000,"p":24404550,"m":0.12,"b":21476004},{"n":"Maruti Ertiga SHVS VDI","l":"Kochi","y":2017,"k":27778,"p":14516635,"m":0.12,"b":12774638},{"n":"Maruti Ciaz 1.4 Zeta","l":"Mumbai","y":2017,"k":5000,"p":13685313,"m":0.12,"b":12043075},{"n":"Maruti Ciaz ZXi","l":"Pune","y":2014,"k":72000,"p":8088098,"m":0.12,"b":7117526},{"n":"Mercedes-Benz A Class A200 CDI Sport","l":"Chennai","y":2015,"k":21000,"p":32401962,"m":0.12,"b":28513727},{"n":"Toyota Innova 2.5 ZX Diesel 7 Seater","l":"Kochi","y":2015,"k":59299,"p":17948239,"m":0.12,"b":15794451},{"n":"BMW 3 Series 320d Prestige","l":"Ahmedabad","y":2014,"k":75000,"p":30129719,"m":0.12,"b":26514153},{"n":"Maruti Alto 800 2016-2019 LXI","l":"Kochi","y":2019,"k":3413,"p":6608929,"m":0.12,"b":5815858},{"n":"Ford Ecosport 1.5 DV5 MT Titanium","l":"Mumbai","y":2014,"k":62000,"p":8931421,"m":0.12,"b":7859651},{"n":"Ford Endeavour 3.0L 4X4 AT","l":"Mumbai","y":2010,"k":105001,"p":9920591,"m":0.18,"b":8134885},{"n":"Audi Q5 2.0 TDI","l":"Mumbai","y":2013,"k":89000,"p":29981273,"m":0.18,"b":24584644},{"n":"Hyundai Verna 1.6 SX VTVT","l":"Mumbai","y":2014,"k":21000,"p":9458423,"m":0.12,"b":8323412},{"n":"Mahindra XUV500 W8 4WD","l":"Kolkata","y":2014,"k":50000,"p":12418411,"m":0.12,"b":10928202},{"n":"Tata Indigo CS LX (TDI) BS III","l":"Chennai","y":2011,"k":150000,"p":3161404,"m":0.18,"b":2592351},{"n":"Honda City ZX GXi","l":"Delhi","y":2008,"k":81000,"p":3435227,"m":0.18,"b":2816886},{"n":"Toyota Corolla Altis G","l":"Kolkata","y":2008,"k":89000,"p":3779096,"m":0.18,"b":3098859},{"n":"Hyundai Grand i10 Asta","l":"Kochi","y":2017,"k":35223,"p":8855114,"m":0.12,"b":7792500},{"n":"Hyundai i20 Sportz 1.2","l":"Kolkata","y":2015,"k":48000,"p":6364287,"m":0.12,"b":5600573},{"n":"Volkswagen Polo 1.5 TDI Comfortline","l":"Delhi","y":2015,"k":60000,"p":7627620,"m":0.12,"b":6712306},{"n":"Chevrolet Sail Hatchback 1.2","l":"Kochi","y":2015,"k":47572,"p":7281542,"m":0.12,"b":6407757},{"n":"Mahindra Scorpio VLX Special Edition BS-IV","l":"Delhi","y":2010,"k":72727,"p":5760778,"m":0.18,"b":4723838},{"n":"Maruti Wagon R LXI","l":"Delhi","y":2009,"k":55000,"p":2611718,"m":0.18,"b":2141608},{"n":"Honda Brio S Option MT","l":"Coimbatore","y":2013,"k":44198,"p":7052901,"m":0.12,"b":6206553},{"n":"Maruti Ertiga VXI","l":"Ahmedabad","y":2015,"k":35000,"p":9775858,"m":0.12,"b":8602755},{"n":"Hyundai Santro Xing GL","l":"Ahmedabad","y":2013,"k":63831,"p":4069768,"m":0.12,"b":3581396},{"n":"Ford Figo Aspire 1.2 Ti-VCT Titanium","l":"Delhi","y":2017,"k":17540,"p":9099404,"m":0.12,"b":8007475},{"n":"Hyundai Santro Xing XL","l":"Bangalore","y":2007,"k":47000,"p":3198808,"m":0.18,"b":2623022},{"n":"Chevrolet Beat LT","l":"Chennai","y":2010,"k":75422,"p":3159165,"m":0.18,"b":2590515},{"n":"Nissan Micra Diesel XV","l":"Hyderabad","y":2011,"k":67000,"p":4902411,"m":0.18,"b":4019977},{"n":"Toyota Innova 2.5 GX (Diesel) 8 Seater","l":"Delhi","y":2013,"k":79999,"p":12921955,"m":0.12,"b":11371320},{"n":"Maruti Ciaz VXi","l":"Kolkata","y":2016,"k":31601,"p":8920950,"m":0.12,"b":7850436},{"n":"BMW 5 Series 2013-2017 520d Luxury Line","l":"Delhi","y":2014,"k":70000,"p":27082039,"m":0.12,"b":23832194},{"n":"Toyota Corolla Altis D-4D G","l":"Mumbai","y":2016,"k":31700,"p":13489963,"m":0.12,"b":11871167},{"n":"Hyundai Verna 1.6 SX CRDi (O)","l":"Kochi","y":2014,"k":76969,"p":9099713,"m":0.12,"b":8007748},{"n":"Volkswagen Vento 1.5 TDI Highline AT","l":"Kolkata","y":2015,"k":37000,"p":9712451,"m":0.12,"b":8546957},{"n":"Nissan Teana XL","l":"Mumbai","y":2014,"k":23000,"p":25757054,"m":0.12,"b":22666208},{"n":"Hyundai i20 1.2 Sportz Option","l":"Coimbatore","y":2014,"k":59098,"p":8294161,"m":0.12,"b":7298861},{"n":"Tata Manza Club Class Safire90 LX","l":"Kochi","y":2010,"k":142299,"p":3288524,"m":0.18,"b":2696590},{"n":"Ford Figo Diesel ZXI","l":"Jaipur","y":2011,"k":75731,"p":3446102,"m":0.18,"b":2825804},{"n":"Hyundai i20 Asta 1.2","l":"Coimbatore","y":2017,"k":69627,"p":11143178,"m":0.12,"b":9805997},{"n":"Ford Fiesta Classic 1.6 SXI Duratec","l":"Mumbai","y":2011,"k":49000,"p":4966603,"m":0.18,"b":4072614},{"n":"Mercedes-Benz B Class B180 Sports","l":"Mumbai","y":2015,"k":25700,"p":21093515,"m":0.12,"b":18562293},{"n":"Hyundai i20 Magna","l":"Delhi","y":2012,"k":80800,"p":4694041,"m":0.18,"b":3849113},{"n":"Maruti Swift Dzire VDI","l":"Hyderabad","y":2013,"k":110896,"p":7339235,"m":0.18,"b":6018173},{"n":"Hyundai Santro Xing GLS","l":"Kolkata","y":2009,"k":62261,"p":1828875,"m":0.18,"b":1499678},{"n":"Honda Accord 2.4 Elegance M/T","l":"Kochi","y":2011,"k":89219,"p":7998690,"m":0.18,"b":6558926},{"n":"Nissan Micra XL CVT","l":"Hyderabad","y":2018,"k":6700,"p":10523585,"m":0.12,"b":9260755},{"n":"Maruti Zen Estilo LXI BS IV","l":"Pune","y":2011,"k":51599,"p":3343832,"m":0.18,"b":2741942},{"n":"Hyundai Elantra CRDi SX","l":"Kolkata","y":2013,"k":37489,"p":8190883,"m":0.12,"b":7207977},{"n":"Tata Indica V2 DiCOR DLG BS-III","l":"Mumbai","y":2016,"k":98000,"p":5374378,"m":0.18,"b":4406990},{"n":"Tata Nano Lx","l":"Hyderabad","y":2012,"k":25183,"p":2004132,"m":0.18,"b":1643388},{"n":"BMW 5 Series 2013-2017 520d Luxury Line","l":"Bangalore","y":2015,"k":52100,"p":46341925,"m":0.12,"b":40780894},{"n":"Honda Amaze S i-Dtech","l":"Pune","y":2014,"k":60000,"p":7302610,"m":0.12,"b":6426297},{"n":"Volkswagen Polo Diesel Highline 1.2L","l":"Kolkata","y":2013,"k":51000,"p":4468603,"m":0.12,"b":3932370},{"n":"Tata Indica Vista Quadrajet LX","l":"Mumbai","y":2012,"k":70000,"p":5415809,"m":0.18,"b":4440963},{"n":"Audi Q3 30 TDI S Edition","l":"Jaipur","y":2015,"k":95000,"p":16512857,"m":0.18,"b":13540542},{"n":"Honda City i DTEC SV","l":"Jaipur","y":2014,"k":66346,"p":8954656,"m":0.12,"b":7880097},{"n":"Honda Amaze SX i-DTEC","l":"Hyderabad","y":2015,"k":69150,"p":9049365,"m":0.12,"b":7963441},{"n":"Hyundai i20 Asta Option 1.2","l":"Bangalore","y":2016,"k":31000,"p":9262355,"m":0.12,"b":8150872},{"n":"BMW 5 Series 2013-2017 520d Luxury Line","l":"Bangalore","y":2013,"k":49000,"p":33235972,"m":0.12,"b":29247655},{"n":"Honda Brio S MT","l":"Kochi","y":2014,"k":63058,"p":6239285,"m":0.12,"b":5490571},{"n":"Mercedes-Benz New C-Class C 250 CDI Avantgarde","l":"Delhi","y":2016,"k":22000,"p":76064223,"m":0.12,"b":66936516},{"n":"Volkswagen Polo 1.2 MPI Highline","l":"Coimbatore","y":2015,"k":73026,"p":8609879,"m":0.12,"b":7576693},{"n":"Hyundai i10 Magna AT","l":"Coimbatore","y":2011,"k":21762,"p":6538442,"m":0.18,"b":5361522},{"n":"Hyundai Verna 1.6 SX VTVT","l":"Coimbatore","y":2018,"k":29738,"p":18567676,"m":0.12,"b":16339555},{"n":"Hyundai i20 1.2 Magna Executive","l":"Mumbai","y":2018,"k":16053,"p":9604310,"m":0.12,"b":8451793},{"n":"BMW 5 Series 525d Sedan","l":"Kochi","y":2012,"k":61665,"p":30941122,"m":0.18,"b":25371720},{"n":"Maruti Swift Dzire Vdi BSIV","l":"Delhi","y":2015,"k":51000,"p":7313301,"m":0.12,"b":6435705},{"n":"Maruti Ertiga VXI","l":"Mumbai","y":2018,"k":12000,"p":13714296,"m":0.12,"b":12068581},{"n":"Maruti Swift Dzire VDI Optional","l":"Hyderabad","y":2017,"k":32287,"p":10797796,"m":0.12,"b":9502060},{"n":"Toyota Etios Liva GD","l":"Jaipur","y":2012,"k":121134,"p":6162501,"m":0.18,"b":5053251},{"n":"BMW X3 xDrive20d","l":"Coimbatore","y":2015,"k":74485,"p":36424470,"m":0.12,"b":32053534},{"n":"Chevrolet Beat Diesel LS","l":"Chennai","y":2011,"k":63000,"p":2969277,"m":0.18,"b":2434807},{"n":"Mercedes-Benz GL-Class 2007 2012 350 CDI Luxury","l":"Bangalore","y":2016,"k":26900,"p":98958707,"m":0.12,"b":87083662},{"n":"BMW 3 Series GT 320d Sport Line","l":"Hyderabad","y":2015,"k":40000,"p":43590956,"m":0.12,"b":38360041},{"n":"Hyundai Grand i10 Asta Option","l":"Coimbatore","y":2016,"k":40587,"p":9452863,"m":0.12,"b":8318519},{"n":"Hyundai Grand i10 Asta","l":"Hyderabad","y":2015,"k":27000,"p":8048000,"m":0.12,"b":7082240},{"n":"Toyota Etios Liva VD","l":"Coimbatore","y":2016,"k":29108,"p":9974064,"m":0.12,"b":8777177},{"n":"Maruti A-Star Zxi","l":"Chennai","y":2009,"k":60000,"p":2950807,"m":0.21,"b":2331137},{"n":"Honda Civic 2010-2013 1.8 V AT Sunroof","l":"Pune","y":2011,"k":61000,"p":6010735,"m":0.21,"b":4748480},{"n":"Maruti Alto 800 LXI","l":"Kolkata","y":2017,"k":5000,"p":4287177,"m":0.12,"b":3772716},{"n":"Hyundai i20 1.4 CRDi Sportz","l":"Hyderabad","y":2011,"k":76000,"p":6559311,"m":0.18,"b":5378635},{"n":"Ford EcoSport 1.0 Ecoboost Titanium Plus","l":"Hyderabad","y":2014,"k":56000,"p":10723373,"m":0.12,"b":9436568},{"n":"Mahindra KUV 100 mFALCON G80 K4 5str","l":"Mumbai","y":2016,"k":30000,"p":7227442,"m":0.12,"b":6360149},{"n":"Maruti Vitara Brezza VDi Option","l":"Hyderabad","y":2017,"k":44263,"p":14756532,"m":0.12,"b":12985748},{"n":"Ford Figo Diesel ZXI","l":"Hyderabad","y":2011,"k":97899,"p":3993079,"m":0.18,"b":3274325},{"n":"Volkswagen Vento Diesel Highline","l":"Jaipur","y":2011,"k":157301,"p":5461913,"m":0.18,"b":4478769},{"n":"Ford Fiesta 1.4 SXI Duratorq","l":"Jaipur","y":2008,"k":135000,"p":3306912,"m":0.18,"b":2711668},{"n":"Fiat Avventura FIRE Dynamic","l":"Pune","y":2016,"k":35000,"p":7803123,"m":0.12,"b":6866748},{"n":"Honda Civic 2006-2010 1.8 V MT","l":"Pune","y":2009,"k":106000,"p":4139813,"m":0.18,"b":3394646},{"n":"Honda CR-V Diesel","l":"Kolkata","y":2016,"k":121590,"p":16990958,"m":0.18,"b":13932586},{"n":"Hyundai i10 Magna","l":"Mumbai","y":2010,"k":41000,"p":3399785,"m":0.18,"b":2787824},{"n":"Volkswagen Ameo 1.5 TDI Highline AT","l":"Coimbatore","y":2018,"k":25143,"p":19709930,"m":0.12,"b":17344738},{"n":"Volkswagen Vento Diesel Highline","l":"Ahmedabad","y":2011,"k":51000,"p":6187185,"m":0.18,"b":5073492},{"n":"Hyundai Accent CRDi","l":"Pune","y":2005,"k":109000,"p":1783022,"m":0.18,"b":1462078},{"n":"Ford Ecosport 1.5 DV5 MT Titanium Optional","l":"Kochi","y":2015,"k":69062,"p":9916066,"m":0.12,"b":8726138},{"n":"Jaguar XF 2.2 Litre Luxury","l":"Kochi","y":2015,"k":34386,"p":48077229,"m":0.12,"b":42307962},{"n":"Maruti Baleno Alpha 1.2","l":"Delhi","y":2016,"k":20185,"p":9859796,"m":0.12,"b":8676620},{"n":"Hyundai Grand i10 CRDi Magna","l":"Hyderabad","y":2013,"k":41585,"p":6516260,"m":0.12,"b":5734309},{"n":"Hyundai EON Era","l":"Kolkata","y":2011,"k":24000,"p":1993076,"m":0.18,"b":1634322},{"n":"Mercedes-Benz E-Class 2015-2017 E250 Edition E","l":"Bangalore","y":2016,"k":40000,"p":56074821,"m":0.12,"b":49345843},{"n":"Mercedes-Benz M-Class ML 350 4Matic","l":"Bangalore","y":2012,"k":37000,"p":35692075,"m":0.18,"b":29267501},{"n":"Maruti Celerio VXI AT","l":"Coimbatore","y":2016,"k":24192,"p":7709205,"m":0.12,"b":6784100},{"n":"Maruti Vitara Brezza VDi Option","l":"Hyderabad","y":2017,"k":32248,"p":14969766,"m":0.12,"b":13173394},{"n":"Mahindra Xylo E9","l":"Mumbai","y":2013,"k":28000,"p":12184705,"m":0.12,"b":10722540},{"n":"Honda Mobilio V i VTEC","l":"Kochi","y":2015,"k":69689,"p":9142434,"m":0.12,"b":8045342},{"n":"Mercedes-Benz GL-Class 350 CDI Blue Efficiency","l":"Kochi","y":2015,"k":69095,"p":66856933,"m":0.12,"b":58834101},{"n":"Hyundai i20 Magna","l":"Kolkata","y":2010,"k":46000,"p":3234853,"m":0.18,"b":2652579},{"n":"Mercedes-Benz S Class 2005 2013 S 350 L","l":"Mumbai","y":2008,"k":65000,"p":14839089,"m":0.21,"b":11722880},{"n":"Mercedes-Benz E-Class E250 CDI Avantgrade","l":"Bangalore","y":2015,"k":38339,"p":46037332,"m":0.12,"b":40512852},{"n":"Toyota Etios V","l":"Mumbai","y":2012,"k":59503,"p":5066284,"m":0.18,"b":4154353},{"n":"Tata Indica Vista Aqua TDI BSIII","l":"Chennai","y":2010,"k":93600,"p":3079637,"m":0.21,"b":2432913},{"n":"Volkswagen Passat 1.8 TSI MT","l":"Coimbatore","y":2011,"k":58865,"p":9975365,"m":0.18,"b":8179799},{"n":"Maruti Alto LXi","l":"Coimbatore","y":2012,"k":64631,"p":4345991,"m":0.18,"b":3563713},{"n":"Skoda Laura 1.9 TDI MT Elegance","l":"Pune","y":2007,"k":124298,"p":4120584,"m":0.18,"b":3378879},{"n":"Maruti Wagon R LX","l":"Jaipur","y":2003,"k":50000,"p":1474056,"m":0.18,"b":1208726},{"n":"Nissan Sunny 2011-2014 Diesel XV","l":"Kolkata","y":2013,"k":40001,"p":5669644,"m":0.12,"b":4989287},{"n":"Honda Brio VX","l":"Bangalore","y":2015,"k":62659,"p":7469175,"m":0.12,"b":6572874},{"n":"Hyundai i10 Sportz","l":"Kochi","y":2014,"k":68138,"p":6042942,"m":0.12,"b":5317789},{"n":"Mercedes-Benz M-Class ML 250 CDI","l":"Mumbai","y":2014,"k":34000,"p":46219526,"m":0.12,"b":40673183},{"n":"Volkswagen Vento Petrol Comfortline","l":"Mumbai","y":2013,"k":67000,"p":6088848,"m":0.12,"b":5358186},{"n":"Honda Mobilio S i DTEC","l":"Delhi","y":2015,"k":64141,"p":9046542,"m":0.12,"b":7960957},{"n":"Mercedes-Benz E-Class E250 CDI Avantgrade","l":"Mumbai","y":2013,"k":42000,"p":29389138,"m":0.12,"b":25862442},{"n":"Honda City ZX VTEC Plus","l":"Coimbatore","y":2009,"k":76677,"p":5814355,"m":0.21,"b":4593341},{"n":"Audi A8 L 3.0 TDI quattro","l":"Kochi","y":2013,"k":66848,"p":46881030,"m":0.12,"b":41255306},{"n":"Hyundai Santro Xing GL","l":"Ahmedabad","y":2007,"k":78000,"p":2424293,"m":0.18,"b":1987920},{"n":"Maruti Swift Dzire VDi","l":"Delhi","y":2010,"k":111166,"p":3738484,"m":0.18,"b":3065557},{"n":"Hyundai Verna CRDi ABS","l":"Chennai","y":2007,"k":76000,"p":4419101,"m":0.18,"b":3623663},{"n":"Audi Q5 2008-2012 2.0 TDI","l":"Coimbatore","y":2012,"k":94049,"p":28575162,"m":0.18,"b":23431633},{"n":"BMW X1 sDrive20d","l":"Ahmedabad","y":2014,"k":47000,"p":31414344,"m":0.12,"b":27644622},{"n":"Tata Indica DLS","l":"Chennai","y":2006,"k":140000,"p":1664111,"m":0.18,"b":1364571},{"n":"Tata Nano XT","l":"Delhi","y":2015,"k":20047,"p":3005455,"m":0.12,"b":2644800},{"n":"Honda Brio 1.2 S MT","l":"Chennai","y":2012,"k":27000,"p":5774014,"m":0.18,"b":4734691},{"n":"Maruti Alto 800 2016-2019 LXI","l":"Mumbai","y":2018,"k":1001,"p":5746057,"m":0.12,"b":5056530},{"n":"Hyundai i20 1.2 Sportz","l":"Kolkata","y":2010,"k":89312,"p":3158787,"m":0.18,"b":2590206},{"n":"Hindustan Motors Contessa 2.0 DSL","l":"Pune","y":1996,"k":65000,"p":2524150,"m":0.18,"b":2069803},{"n":"Renault Duster 110PS Diesel RxZ","l":"Pune","y":2012,"k":93000,"p":7681526,"m":0.18,"b":6298852},{"n":"Maruti Swift Dzire VDI","l":"Kolkata","y":2013,"k":48000,"p":5143080,"m":0.12,"b":4525910},{"n":"Honda City i VTEC V","l":"Jaipur","y":2017,"k":19678,"p":14238965,"m":0.12,"b":12530289},{"n":"Jaguar XF Diesel","l":"Kolkata","y":2014,"k":12000,"p":51578776,"m":0.12,"b":45389323},{"n":"BMW 3 Series 320d Luxury Line","l":"Delhi","y":2014,"k":41309,"p":30528744,"m":0.12,"b":26865295},{"n":"Chevrolet Beat Diesel LS","l":"Coimbatore","y":2016,"k":68673,"p":5620200,"m":0.12,"b":4945776},{"n":"Mercedes-Benz New C-Class C 220d Avantgarde Edition C","l":"Coimbatore","y":2018,"k":26343,"p":60035912,"m":0.12,"b":52831603},{"n":"Maruti Omni E 8 Str STD","l":"Bangalore","y":2005,"k":81245,"p":2025639,"m":0.21,"b":1600255},{"n":"Nissan Micra Diesel XV","l":"Delhi","y":2012,"k":62100,"p":4379038,"m":0.18,"b":3590812},{"n":"Volkswagen Vento Petrol Highline","l":"Pune","y":2013,"k":104000,"p":6189058,"m":0.18,"b":5075027},{"n":"Audi A6 2011-2015 2.0 TDI Premium Plus","l":"Coimbatore","y":2014,"k":114831,"p":30877729,"m":0.18,"b":25319738},{"n":"Fiat Linea Dynamic","l":"Mumbai","y":2010,"k":46000,"p":2874091,"m":0.18,"b":2356755},{"n":"Hyundai Verna 1.6 SX","l":"Jaipur","y":2014,"k":80000,"p":9845466,"m":0.12,"b":8664010},{"n":"Hyundai i20 Active 1.2 S","l":"Kolkata","y":2016,"k":9201,"p":7529970,"m":0.12,"b":6626373},{"n":"Honda Brio V MT","l":"Kochi","y":2013,"k":55311,"p":5571762,"m":0.12,"b":4903151},{"n":"Honda Mobilio RS Option i DTEC","l":"Coimbatore","y":2015,"k":58217,"p":11153183,"m":0.12,"b":9814801},{"n":"Hyundai i10 Magna","l":"Kolkata","y":2015,"k":46000,"p":5061877,"m":0.12,"b":4454452},{"n":"Tata Manza Club Class Quadrajet90 LS","l":"Pune","y":2014,"k":125000,"p":7040630,"m":0.18,"b":5773317},{"n":"Renault Duster Adventure Edition","l":"Mumbai","y":2014,"k":59000,"p":9290281,"m":0.12,"b":8175447},{"n":"Maruti Ritz VDi","l":"Hyderabad","y":2009,"k":82242,"p":4937620,"m":0.18,"b":4048848},{"n":"Toyota Innova 2.5 V Diesel 8-seater","l":"Hyderabad","y":2012,"k":107281,"p":16653906,"m":0.18,"b":13656203},{"n":"Tata Sumo EX 10/7 Str BSII","l":"Chennai","y":2015,"k":196000,"p":7107538,"m":0.18,"b":5828181},{"n":"Fiat Grande Punto 1.2 Emotion","l":"Kolkata","y":2011,"k":11791,"p":3058571,"m":0.18,"b":2508028},{"n":"Hyundai Elantra SX","l":"Ahmedabad","y":2013,"k":46000,"p":15351818,"m":0.12,"b":13509600},{"n":"Volkswagen Polo Diesel Trendline 1.2L","l":"Pune","y":2011,"k":81000,"p":4553268,"m":0.18,"b":3733680},{"n":"Hyundai Grand i10 Asta Option","l":"Chennai","y":2017,"k":18000,"p":8583186,"m":0.12,"b":7553204},{"n":"Mahindra Scorpio S4 7 Seater","l":"Coimbatore","y":2016,"k":95942,"p":15170110,"m":0.18,"b":12439491},{"n":"Maruti Ciaz VXi Plus","l":"Kochi","y":2016,"k":42925,"p":10907575,"m":0.12,"b":9598666},{"n":"Ford Figo Petrol Titanium","l":"Hyderabad","y":2014,"k":33750,"p":5909520,"m":0.12,"b":5200378},{"n":"Mini Cooper S","l":"Mumbai","y":2016,"k":14000,"p":45487783,"m":0.12,"b":40029249},{"n":"Hyundai Creta 1.6 CRDi SX","l":"Bangalore","y":2015,"k":29000,"p":18672970,"m":0.12,"b":16432214},{"n":"Mahindra XUV500 W8 2WD","l":"Kochi","y":2015,"k":67365,"p":15070493,"m":0.12,"b":13262034},{"n":"Mahindra XUV500 W8 2WD","l":"Coimbatore","y":2014,"k":67791,"p":13911385,"m":0.12,"b":12242018},{"n":"Mahindra Thar CRDe AC","l":"Hyderabad","y":2016,"k":20000,"p":16164836,"m":0.12,"b":14225056},{"n":"Maruti Swift Dzire VDi","l":"Jaipur","y":2011,"k":90198,"p":4598659,"m":0.18,"b":3770901},{"n":"Hyundai i10 Sportz 1.1L","l":"Pune","y":2010,"k":77000,"p":3294929,"m":0.18,"b":2701842},{"n":"Maruti Ciaz VXi","l":"Kochi","y":2017,"k":42520,"p":12455851,"m":0.12,"b":10961149},{"n":"Maruti Wagon R LXI DUO BSIII","l":"Jaipur","y":2009,"k":87829,"p":2010708,"m":0.18,"b":1648781},{"n":"Maruti Alto LX BSIII","l":"Coimbatore","y":2008,"k":86033,"p":3550318,"m":0.18,"b":2911261},{"n":"Hyundai Xcent 1.2 Kappa S Option","l":"Mumbai","y":2015,"k":25000,"p":6973910,"m":0.12,"b":6137041},{"n":"Toyota Corolla Altis Diesel D4DG","l":"Kolkata","y":2011,"k":45000,"p":5224941,"m":0.18,"b":4284451},{"n":"Volkswagen Polo Petrol Highline 1.2L","l":"Coimbatore","y":2018,"k":22987,"p":9927562,"m":0.12,"b":8736255},{"n":"Hyundai i10 Era","l":"Jaipur","y":2009,"k":48725,"p":2815668,"m":0.18,"b":2308847},{"n":"Hyundai Verna 1.6 SX VTVT (O) AT","l":"Mumbai","y":2014,"k":35000,"p":10494451,"m":0.12,"b":9235116},{"n":"Ford Fiesta 1.4 SXi TDCi ABS","l":"Bangalore","y":2014,"k":56000,"p":6276296,"m":0.12,"b":5523141},{"n":"Tata Xenon XT EX 4X2","l":"Hyderabad","y":2014,"k":10000,"p":13392603,"m":0.12,"b":11785491},{"n":"Maruti Alto K10 2010-2014 VXI","l":"Mumbai","y":2010,"k":15669,"p":3491474,"m":0.18,"b":2863009},{"n":"Audi A6 2011-2015 35 TDI Premium","l":"Kochi","y":2016,"k":55331,"p":42285162,"m":0.12,"b":37210942},{"n":"Renault Duster 85PS Diesel RxL Optional","l":"Pune","y":2015,"k":44535,"p":10037695,"m":0.12,"b":8833171},{"n":"Mahindra Thar 4X4","l":"Delhi","y":2012,"k":74000,"p":8886710,"m":0.18,"b":7287102},{"n":"Toyota Innova 2.5 GX (Diesel) 7 Seater","l":"Delhi","y":2014,"k":77901,"p":15898705,"m":0.12,"b":13990861},{"n":"Maruti Swift Dzire VXi","l":"Kolkata","y":2010,"k":58186,"p":3163303,"m":0.18,"b":2593909},{"n":"Chevrolet Aveo 1.6 LT","l":"Mumbai","y":2010,"k":30000,"p":4316233,"m":0.18,"b":3539311},{"n":"Toyota Etios GD","l":"Bangalore","y":2012,"k":90000,"p":7556979,"m":0.18,"b":6196722},{"n":"Maruti Alto LXi","l":"Jaipur","y":2013,"k":40000,"p":3181030,"m":0.12,"b":2799307},{"n":"Chevrolet Aveo U-VA 1.2 LS","l":"Chennai","y":2007,"k":88107,"p":2067830,"m":0.18,"b":1695620},{"n":"Maruti Swift VDI BSIV","l":"Hyderabad","y":2013,"k":76000,"p":7949614,"m":0.12,"b":6995660},{"n":"Toyota Innova 2.5 V Diesel 8-seater","l":"Hyderabad","y":2008,"k":200000,"p":7860421,"m":0.18,"b":6445545},{"n":"Mercedes-Benz E-Class 2009-2013 E250 CDI Avantgarde","l":"Hyderabad","y":2013,"k":73000,"p":42196262,"m":0.12,"b":37132711},{"n":"Hyundai Accent GLE 1","l":"Jaipur","y":2009,"k":77200,"p":2557815,"m":0.18,"b":2097408},{"n":"Audi A4 New 2.0 TDI Multitronic","l":"Delhi","y":2012,"k":67000,"p":15313608,"m":0.18,"b":12557159},{"n":"Chevrolet Tavera LS B3 10 Seats BSIII","l":"Hyderabad","y":2005,"k":150000,"p":3815832,"m":0.18,"b":3128982},{"n":"Mahindra Xylo E8 ABS BS IV","l":"Jaipur","y":2009,"k":145278,"p":5373927,"m":0.18,"b":4406620},{"n":"Honda Civic 2006-2010 1.8 V MT","l":"Pune","y":2010,"k":61696,"p":4820628,"m":0.18,"b":3952915},{"n":"Mercedes-Benz New C-Class 220 CDI AT","l":"Coimbatore","y":2013,"k":50142,"p":28935665,"m":0.12,"b":25463386},{"n":"Skoda Superb Elegance 1.8 TSI AT","l":"Mumbai","y":2014,"k":45000,"p":17134361,"m":0.12,"b":15078238},{"n":"Skoda Rapid 1.5 TDI Elegance","l":"Pune","y":2014,"k":97513,"p":8278223,"m":0.18,"b":6788143},{"n":"Mercedes-Benz E-Class 2009-2013 E200 CGI Blue Efficiency","l":"Mumbai","y":2011,"k":55000,"p":19861074,"m":0.18,"b":16286081},{"n":"Maruti 800 AC","l":"Hyderabad","y":2004,"k":82000,"p":1374406,"m":0.18,"b":1127013},{"n":"Maruti Swift LDI","l":"Delhi","y":2013,"k":71501,"p":5387619,"m":0.12,"b":4741105},{"n":"Audi A6 2011-2015 2.0 TDI Technology","l":"Kochi","y":2015,"k":66095,"p":33078700,"m":0.12,"b":29109256},{"n":"Toyota Fortuner 3.0 Diesel","l":"Mumbai","y":2014,"k":49500,"p":26296776,"m":0.12,"b":23141163},{"n":"Toyota Camry MT with Moonroof","l":"Chennai","y":2009,"k":90000,"p":7146803,"m":0.18,"b":5860378},{"n":"Hyundai Verna 1.6 VTVT S","l":"Delhi","y":2016,"k":27529,"p":13761062,"m":0.12,"b":12109735},{"n":"Honda City V MT","l":"Kochi","y":2012,"k":69297,"p":7145355,"m":0.18,"b":5859191},{"n":"Honda City 1.5 E MT","l":"Hyderabad","y":2009,"k":66000,"p":5905828,"m":0.18,"b":4842779},{"n":"Mercedes-Benz GL-Class 350 CDI Blue Efficiency","l":"Chennai","y":2015,"k":67000,"p":79303602,"m":0.12,"b":69787170},{"n":"Hyundai EON D Lite Plus","l":"Coimbatore","y":2015,"k":36933,"p":5728625,"m":0.12,"b":5041190},{"n":"Toyota Innova 2.5 G (Diesel) 8 Seater","l":"Mumbai","y":2007,"k":194000,"p":6728214,"m":0.18,"b":5517135},{"n":"Maruti Ertiga VDI","l":"Kolkata","y":2013,"k":42200,"p":7439619,"m":0.12,"b":6546865},{"n":"Audi Q7 3.0 TDI Quattro Premium Plus","l":"Coimbatore","y":2015,"k":53093,"p":63576166,"m":0.12,"b":55947026},{"n":"Honda City 1.5 E MT","l":"Pune","y":2012,"k":88000,"p":6401464,"m":0.21,"b":5057157},{"n":"Tata Indica V2 eLX","l":"Chennai","y":2015,"k":106000,"p":3664516,"m":0.18,"b":3004903},{"n":"BMW 5 Series 2013-2017 520d Luxury Line","l":"Kochi","y":2015,"k":41700,"p":40819826,"m":0.12,"b":35921447},{"n":"Mercedes-Benz New C-Class C 220 CDI Avantgarde","l":"Coimbatore","y":2018,"k":34464,"p":53527078,"m":0.12,"b":47103829},{"n":"Chevrolet Beat LT","l":"Ahmedabad","y":2010,"k":15000,"p":4075372,"m":0.18,"b":3341805},{"n":"Maruti Zen Estilo LXI BS IV","l":"Pune","y":2010,"k":70000,"p":3215553,"m":0.18,"b":2636753},{"n":"Mahindra XUV500 W8 4WD","l":"Hyderabad","y":2017,"k":119256,"p":21644435,"m":0.18,"b":17748436},{"n":"Honda City 1.5 V MT","l":"Coimbatore","y":2011,"k":50036,"p":7805770,"m":0.18,"b":6400731},{"n":"Toyota Innova 2.5 VX (Diesel) 7 Seater","l":"Ahmedabad","y":2013,"k":58000,"p":15202847,"m":0.12,"b":13378506},{"n":"Hyundai i20 1.2 Magna","l":"Pune","y":2011,"k":75000,"p":4710194,"m":0.18,"b":3862359},{"n":"Maruti Alto K10 2010-2014 VXI","l":"Hyderabad","y":2013,"k":53313,"p":4833489,"m":0.12,"b":4253470},{"n":"Toyota Innova 2.5 G (Diesel) 8 Seater","l":"Kolkata","y":2015,"k":73000,"p":14331424,"m":0.12,"b":12611653},{"n":"Nissan Micra Diesel XV","l":"Kochi","y":2013,"k":83989,"p":5567602,"m":0.18,"b":4565434},{"n":"Hyundai Creta 1.6 CRDi SX","l":"Chennai","y":2015,"k":86247,"p":14663154,"m":0.18,"b":12023786},{"n":"Toyota Innova 2.5 G (Diesel) 8 Seater","l":"Mumbai","y":2016,"k":24000,"p":18191141,"m":0.12,"b":16008204},{"n":"Mercedes-Benz E-Class 2009-2013 E250 CDI Blue Efficiency","l":"Hyderabad","y":2010,"k":58000,"p":29352825,"m":0.18,"b":24069317},{"n":"Hyundai i20 Asta 1.2","l":"Kolkata","y":2015,"k":33000,"p":6557378,"m":0.12,"b":5770492},{"n":"Honda Accord VTi-L (AT)","l":"Hyderabad","y":2005,"k":100000,"p":4462741,"m":0.18,"b":3659448},{"n":"Hyundai i20 Asta Option 1.4 CRDi","l":"Chennai","y":2016,"k":120000,"p":9490853,"m":0.18,"b":7782500},{"n":"Toyota Corolla Altis VL AT","l":"Mumbai","y":2015,"k":42000,"p":17387762,"m":0.12,"b":15301230},{"n":"Mercedes-Benz A Class A180 Sport","l":"Bangalore","y":2013,"k":35000,"p":14686572,"m":0.12,"b":12924184},{"n":"Hyundai i20 Asta 1.4 CRDi","l":"Kolkata","y":2016,"k":30134,"p":8898363,"m":0.12,"b":7830560},{"n":"Honda Accord 2.4 M/T","l":"Delhi","y":2012,"k":79038,"p":10158979,"m":0.18,"b":8330363},{"n":"Honda Accord 2.4 AT","l":"Mumbai","y":2009,"k":80000,"p":6014910,"m":0.18,"b":4932226},{"n":"Mahindra Bolero SLE BSIII","l":"Hyderabad","y":2012,"k":75000,"p":9143005,"m":0.18,"b":7497264},{"n":"Maruti Ritz LDi","l":"Bangalore","y":2010,"k":80000,"p":5099059,"m":0.18,"b":4181228},{"n":"Skoda Superb Elegance 1.8 TSI AT","l":"Delhi","y":2014,"k":84419,"p":16079497,"m":0.18,"b":13185188},{"n":"Honda Amaze S i-Vtech","l":"Kolkata","y":2013,"k":70200,"p":4133421,"m":0.12,"b":3637410},{"n":"Volkswagen Vento Petrol Highline","l":"Chennai","y":2013,"k":98000,"p":6486683,"m":0.18,"b":5319080},{"n":"Maruti Ritz LDi","l":"Chennai","y":2016,"k":131503,"p":6299407,"m":0.18,"b":5165514},{"n":"Honda City 1.5 S MT","l":"Jaipur","y":2011,"k":54652,"p":6000475,"m":0.18,"b":4920389},{"n":"Volkswagen Jetta 2007-2011 1.6 Trendline","l":"Mumbai","y":2010,"k":92000,"p":3439915,"m":0.18,"b":2820731},{"n":"Ford Figo Petrol ZXI","l":"Kolkata","y":2010,"k":44287,"p":2621404,"m":0.18,"b":2149552},{"n":"Toyota Innova 2.5 G (Diesel) 7 Seater","l":"Pune","y":2015,"k":205000,"p":15879627,"m":0.18,"b":13021294},{"n":"Mahindra KUV 100 mFALCON D75 K2","l":"Mumbai","y":2016,"k":18000,"p":8552747,"m":0.12,"b":7526417},{"n":"Honda City 1.5 V MT","l":"Pune","y":2009,"k":72000,"p":4205959,"m":0.18,"b":3448886},{"n":"Hyundai i20 Magna","l":"Mumbai","y":2009,"k":85000,"p":3800271,"m":0.18,"b":3116222},{"n":"Honda City 1.5 V MT","l":"Kolkata","y":2010,"k":27000,"p":4167307,"m":0.18,"b":3417191},{"n":"Tata Indica V2 DLS BSIII","l":"Pune","y":2017,"k":50000,"p":5384824,"m":0.12,"b":4738645},{"n":"Honda Amaze S i-Vtech","l":"Mumbai","y":2013,"k":58811,"p":5087605,"m":0.12,"b":4477092},{"n":"Volkswagen Polo Diesel Highline 1.2L","l":"Pune","y":2013,"k":52196,"p":6123559,"m":0.12,"b":5388732},{"n":"Hyundai Grand i10 Sportz","l":"Hyderabad","y":2015,"k":25160,"p":7512268,"m":0.12,"b":6610796},{"n":"Tata Tigor 1.2 Revotron XZ Option","l":"Hyderabad","y":2017,"k":18000,"p":9687675,"m":0.12,"b":8525154},{"n":"Honda Accord 2001-2003 2.3 VTI L MT","l":"Bangalore","y":2007,"k":74000,"p":6221768,"m":0.18,"b":5101850},{"n":"Mahindra Xylo E4","l":"Chennai","y":2009,"k":67700,"p":4964763,"m":0.18,"b":4071106},{"n":"Land Rover Freelander 2 S Business Edition","l":"Kochi","y":2015,"k":61062,"p":31398144,"m":0.12,"b":27630367},{"n":"Toyota Innova 2.5 VX (Diesel) 7 Seater","l":"Kolkata","y":2016,"k":105000,"p":14387415,"m":0.18,"b":11797680},{"n":"Tata Indigo eCS eLX BS IV","l":"Pune","y":2013,"k":155550,"p":3737786,"m":0.18,"b":3064984},{"n":"Maruti Vitara Brezza VDi Option","l":"Delhi","y":2016,"k":66000,"p":10427716,"m":0.12,"b":9176390},{"n":"Honda City 1.5 V MT","l":"Kochi","y":2012,"k":93884,"p":6802406,"m":0.18,"b":5577973},{"n":"Fiat Linea Emotion (Diesel)","l":"Mumbai","y":2009,"k":200000,"p":3259692,"m":0.18,"b":2672948},{"n":"Volkswagen Polo Diesel Comfortline 1.2L","l":"Hyderabad","y":2013,"k":93568,"p":6429406,"m":0.18,"b":5272113},{"n":"Maruti Wagon R VXI BS IV","l":"Kolkata","y":2014,"k":54000,"p":4568133,"m":0.12,"b":4019957},{"n":"Hyundai Creta 1.6 CRDi AT SX Plus","l":"Bangalore","y":2016,"k":40571,"p":19232646,"m":0.12,"b":16924729},{"n":"BMW X1 xDrive 20d xLine","l":"Coimbatore","y":2017,"k":17273,"p":52474400,"m":0.12,"b":46177472},{"n":"Ford Endeavour 3.0L AT 4x2","l":"Mumbai","y":2011,"k":100077,"p":10743236,"m":0.18,"b":8809453},{"n":"Hyundai i10 Magna AT","l":"Kochi","y":2011,"k":39934,"p":5675381,"m":0.18,"b":4653812},{"n":"Honda City 1.5 V MT","l":"Coimbatore","y":2016,"k":30842,"p":13454698,"m":0.12,"b":11840134},{"n":"Mercedes-Benz New C-Class 200 K AT","l":"Mumbai","y":2005,"k":65000,"p":7554526,"m":0.18,"b":6194711},{"n":"Volvo XC90 2007-2015 D5 AWD","l":"Bangalore","y":2016,"k":70000,"p":39267648,"m":0.12,"b":34555530},{"n":"Toyota Fortuner 3.0 Diesel","l":"Chennai","y":2011,"k":150152,"p":19111145,"m":0.18,"b":15671139},{"n":"Nissan Teana 230jM","l":"Coimbatore","y":2009,"k":67038,"p":10950661,"m":0.18,"b":8979542},{"n":"Hyundai Santro Xing GLS CNG","l":"Bangalore","y":2011,"k":43985,"p":3742398,"m":0.18,"b":3068766},{"n":"BMW X6 xDrive30d","l":"Coimbatore","y":2014,"k":58598,"p":56377513,"m":0.12,"b":49612211},{"n":"Tata Indigo CS eVX","l":"Pune","y":2016,"k":100000,"p":3798708,"m":0.18,"b":3114941},{"n":"Audi Q5 30 TDI quattro Premium Plus","l":"Jaipur","y":2016,"k":35000,"p":51917892,"m":0.12,"b":45687745},{"n":"Hyundai i10 Sportz 1.2","l":"Pune","y":2008,"k":84500,"p":3190706,"m":0.18,"b":2616379},{"n":"Maruti Baleno Delta 1.2","l":"Kolkata","y":2018,"k":18006,"p":8911816,"m":0.12,"b":7842398},{"n":"Toyota Land Cruiser Prado VX L","l":"Pune","y":2014,"k":130000,"p":28160516,"m":0.18,"b":23091623},{"n":"Hyundai i10 Sportz 1.2","l":"Bangalore","y":2011,"k":20000,"p":5648587,"m":0.18,"b":4631842},{"n":"Audi A4 2.0 TDI","l":"Bangalore","y":2013,"k":46000,"p":28604899,"m":0.12,"b":25172311},{"n":"Toyota Innova 2.5 GX 8 STR","l":"Delhi","y":2011,"k":53138,"p":10025694,"m":0.21,"b":7920298},{"n":"Maruti Swift Dzire Tour LDI","l":"Pune","y":2013,"k":170000,"p":5692288,"m":0.18,"b":4667676},{"n":"Maruti Swift LDI","l":"Kolkata","y":2012,"k":38583,"p":4980019,"m":0.18,"b":4083615},{"n":"Hyundai Creta 1.6 SX Plus Dual Tone Petrol","l":"Coimbatore","y":2017,"k":22865,"p":18856788,"m":0.12,"b":16593974},{"n":"Skoda Laura L and K MT","l":"Kolkata","y":2013,"k":45000,"p":7401227,"m":0.12,"b":6513080},{"n":"Maruti Swift LXI Option","l":"Kochi","y":2017,"k":62889,"p":8654561,"m":0.12,"b":7616014},{"n":"Maruti Omni MPI CARGO BSIV","l":"Pune","y":2013,"k":153000,"p":2273008,"m":0.18,"b":1863867},{"n":"Honda Amaze S AT i-Vtech","l":"Mumbai","y":2014,"k":39000,"p":6231913,"m":0.12,"b":5484083},{"n":"Toyota Corolla H2","l":"Chennai","y":2006,"k":164000,"p":3313457,"m":0.18,"b":2717035},{"n":"Maruti Swift Dzire Vdi BSIV","l":"Coimbatore","y":2018,"k":57178,"p":11533870,"m":0.12,"b":10149805},{"n":"Audi A6 2011-2015 2.0 TDI Premium Plus","l":"Delhi","y":2013,"k":40000,"p":28746336,"m":0.12,"b":25296776},{"n":"Chevrolet Spark 1.0 LT","l":"Mumbai","y":2007,"k":40000,"p":1863997,"m":0.18,"b":1528478},{"n":"Hyundai Verna CRDi ABS","l":"Mumbai","y":2007,"k":89564,"p":3719725,"m":0.21,"b":2938583},{"n":"Maruti Ertiga VXI","l":"Delhi","y":2012,"k":66727,"p":6249168,"m":0.18,"b":5124318},{"n":"Audi Q3 2012-2015 2.0 TDI Quattro Premium Plus","l":"Mumbai","y":2013,"k":75000,"p":25546698,"m":0.12,"b":22481094},{"n":"Chevrolet Cruze LTZ AT","l":"Coimbatore","y":2017,"k":31056,"p":30247846,"m":0.12,"b":26618104},{"n":"Volkswagen Vento Petrol Highline","l":"Pune","y":2011,"k":61000,"p":4970270,"m":0.18,"b":4075621},{"n":"Hyundai Xcent 1.2 Kappa AT SX Option","l":"Kochi","y":2016,"k":34782,"p":9157436,"m":0.12,"b":8058544},{"n":"Hyundai i10 Sportz 1.2","l":"Coimbatore","y":2012,"k":31736,"p":5930652,"m":0.18,"b":4863135},{"n":"Mahindra Thar CRDe AC","l":"Mumbai","y":2014,"k":15000,"p":13000221,"m":0.12,"b":11440194},{"n":"Ford Ecosport 1.5 DV5 MT Ambiente","l":"Coimbatore","y":2016,"k":38503,"p":12553763,"m":0.12,"b":11047312},{"n":"Land Rover Range Rover HSE","l":"Hyderabad","y":2015,"k":30000,"p":67546789,"m":0.12,"b":59441174},{"n":"Toyota Etios G","l":"Pune","y":2011,"k":69470,"p":4341265,"m":0.18,"b":3559837},{"n":"Nissan Teana 230jM","l":"Chennai","y":2008,"k":63288,"p":7258703,"m":0.18,"b":5952136},{"n":"Volkswagen Polo ALLSTAR 1.2 MPI","l":"Coimbatore","y":2017,"k":25087,"p":10072566,"m":0.12,"b":8863858},{"n":"Toyota Innova 2.5 VX (Diesel) 7 Seater BS IV","l":"Hyderabad","y":2015,"k":134000,"p":20280544,"m":0.18,"b":16630046},{"n":"Chevrolet Cruze LTZ AT","l":"Coimbatore","y":2015,"k":54955,"p":21072282,"m":0.15,"b":17911440},{"n":"Honda Amaze S i-Dtech","l":"Ahmedabad","y":2015,"k":45250,"p":8507457,"m":0.12,"b":7486562},{"n":"Land Rover Discovery 4 SDV6 SE","l":"Kochi","y":2012,"k":89190,"p":37129329,"m":0.18,"b":30446050},{"n":"Honda City i DTec VX Option BL","l":"Coimbatore","y":2017,"k":48184,"p":13583650,"m":0.12,"b":11953612},{"n":"Maruti Swift Dzire VDI","l":"Kolkata","y":2015,"k":42125,"p":7085297,"m":0.12,"b":6235061},{"n":"Hyundai i10 Sportz 1.2","l":"Mumbai","y":2011,"k":67000,"p":3814563,"m":0.18,"b":3127942},{"n":"Hyundai Santro GLS I - Euro II","l":"Bangalore","y":2011,"k":43189,"p":4580882,"m":0.18,"b":3756324},{"n":"Maruti Swift Dzire VDI","l":"Pune","y":2015,"k":174889,"p":6609005,"m":0.18,"b":5419384},{"n":"Maruti Alto LXI","l":"Pune","y":2004,"k":72135,"p":1500786,"m":0.18,"b":1230644},{"n":"Honda Accord 2.4 A/T","l":"Pune","y":2009,"k":120000,"p":7317193,"m":0.18,"b":6000098},{"n":"Chevrolet Beat LT","l":"Pune","y":2010,"k":29629,"p":3176727,"m":0.18,"b":2604916},{"n":"Maruti Swift VDI BSIV W ABS","l":"Coimbatore","y":2016,"k":69564,"p":11073344,"m":0.12,"b":9744542},{"n":"Mahindra Xylo D4 BSIV","l":"Kolkata","y":2013,"k":61000,"p":7712840,"m":0.12,"b":6787299},{"n":"Jaguar XF 2.2 Litre Luxury","l":"Kochi","y":2015,"k":27912,"p":48233929,"m":0.12,"b":42445857},{"n":"Maruti SX4 VDI","l":"Kochi","y":2013,"k":62909,"p":6631839,"m":0.12,"b":5836018},{"n":"Maruti Celerio VXI","l":"Kochi","y":2018,"k":33140,"p":7280547,"m":0.12,"b":6406881},{"n":"Volkswagen Vento 1.5 TDI Comfortline AT","l":"Hyderabad","y":2014,"k":75000,"p":12194935,"m":0.12,"b":10731543},{"n":"Ford EcoSport 1.5 TDCi Titanium","l":"Kochi","y":2017,"k":25571,"p":13167861,"m":0.12,"b":11587717},{"n":"Hyundai Santro LS zipDrive Euro I","l":"Chennai","y":2002,"k":120000,"p":1493393,"m":0.21,"b":1179781},{"n":"Maruti Ertiga VDI","l":"Kolkata","y":2016,"k":12020,"p":10539303,"m":0.12,"b":9274586},{"n":"Honda Brio VX AT","l":"Mumbai","y":2014,"k":36665,"p":6684232,"m":0.12,"b":5882124},{"n":"Mercedes-Benz E-Class 2009-2013 E250 CDI Blue Efficiency","l":"Pune","y":2011,"k":130000,"p":22126936,"m":0.18,"b":18144088},{"n":"Maruti Swift VDI Optional","l":"Bangalore","y":2017,"k":51000,"p":9646907,"m":0.12,"b":8489279},{"n":"Hyundai Accent GLE","l":"Pune","y":2008,"k":103000,"p":2498738,"m":0.18,"b":2048965},{"n":"Audi A4 2.0 TDI","l":"Delhi","y":2012,"k":70000,"p":17884681,"m":0.18,"b":14665439},{"n":"Honda City 1.5 S MT","l":"Delhi","y":2010,"k":56239,"p":4938441,"m":0.18,"b":4049521},{"n":"BMW 3 Series 320d Sport","l":"Ahmedabad","y":2016,"k":40000,"p":37551203,"m":0.12,"b":33045058},{"n":"Mahindra Bolero VLX CRDe","l":"Coimbatore","y":2012,"k":72246,"p":8981329,"m":0.18,"b":7364689},{"n":"Tata Nano XT","l":"Bangalore","y":2016,"k":14000,"p":3706218,"m":0.15,"b":3150286},{"n":"Volkswagen Polo 1.2 MPI Highline","l":"Pune","y":2016,"k":22764,"p":7289369,"m":0.12,"b":6414645},{"n":"Volkswagen Passat Diesel Highline 2.0 TDI","l":"Pune","y":2012,"k":65000,"p":20455312,"m":0.18,"b":16773356},{"n":"ISUZU MU 7 4x2 HIPACK","l":"Kolkata","y":2016,"k":45000,"p":17560461,"m":0.12,"b":15453206},{"n":"Mercedes-Benz E-Class 2015-2017 E250 CDI Avantgarde","l":"Coimbatore","y":2017,"k":32090,"p":61736577,"m":0.12,"b":54328188},{"n":"Mahindra XUV500 W8 2WD","l":"Pune","y":2014,"k":83000,"p":13398733,"m":0.18,"b":10986961},{"n":"Mercedes-Benz E-Class 2015-2017 E250 CDI Avantgarde","l":"Delhi","y":2011,"k":70000,"p":20011074,"m":0.18,"b":16409081},{"n":"Mahindra XUV500 W8 2WD","l":"Chennai","y":2013,"k":68000,"p":13371417,"m":0.12,"b":11766847},{"n":"Nissan Sunny 2011-2014 XL","l":"Jaipur","y":2012,"k":105000,"p":5255542,"m":0.18,"b":4309544},{"n":"Hyundai Elantra GT","l":"Hyderabad","y":2006,"k":88000,"p":3765825,"m":0.18,"b":3087977},{"n":"Honda Accord VTi-L AT","l":"Mumbai","y":2007,"k":93000,"p":5274571,"m":0.18,"b":4325148},{"n":"Honda City i DTEC SV","l":"Delhi","y":2014,"k":107000,"p":7254666,"m":0.18,"b":5948826},{"n":"Toyota Fortuner 4x4 MT","l":"Pune","y":2011,"k":141844,"p":18289562,"m":0.18,"b":14997441},{"n":"Nissan Micra XV CVT","l":"Coimbatore","y":2015,"k":32469,"p":8429723,"m":0.12,"b":7418157},{"n":"Mahindra XUV500 W6 2WD","l":"Kochi","y":2015,"k":56318,"p":15136933,"m":0.12,"b":13320501},{"n":"Maruti Swift VDI BSIV","l":"Pune","y":2014,"k":83000,"p":7639921,"m":0.18,"b":6264735},{"n":"Chevrolet Beat LS","l":"Pune","y":2010,"k":80000,"p":2973464,"m":0.18,"b":2438241},{"n":"Maruti Baleno Alpha 1.2","l":"Chennai","y":2016,"k":56474,"p":8393669,"m":0.12,"b":7386429},{"n":"Audi Q5 2008-2012 2.0 TFSI Quattro","l":"Mumbai","y":2009,"k":49000,"p":14773802,"m":0.18,"b":12114518},{"n":"Skoda Laura 1.9 TDI AT Ambiente","l":"Kochi","y":2010,"k":64132,"p":7706503,"m":0.18,"b":6319333},{"n":"Hyundai Creta 1.6 CRDi SX Option","l":"Hyderabad","y":2016,"k":41810,"p":19043381,"m":0.12,"b":16758175},{"n":"BMW 7 Series 730Ld","l":"Mumbai","y":2013,"k":60000,"p":46592684,"m":0.12,"b":41001562},{"n":"Mercedes-Benz M-Class ML 350 4Matic","l":"Coimbatore","y":2016,"k":22177,"p":75059898,"m":0.12,"b":66052710},{"n":"Ford Figo Diesel ZXI","l":"Chennai","y":2014,"k":100000,"p":5221189,"m":0.18,"b":4281375},{"n":"Skoda Laura Ambiente 2.0 TDI CR AT","l":"Pune","y":2012,"k":75000,"p":12877631,"m":0.18,"b":10559658},{"n":"Hyundai i20 1.4 CRDi Magna","l":"Mumbai","y":2011,"k":68000,"p":4902825,"m":0.18,"b":4020316},{"n":"Toyota Innova 2.5 G (Diesel) 7 Seater","l":"Kochi","y":2016,"k":43518,"p":17101621,"m":0.12,"b":15049427},{"n":"Maruti A-Star AT Vxi Aktiv","l":"Pune","y":2012,"k":39100,"p":4244148,"m":0.18,"b":3480201},{"n":"Hyundai Verna 1.6 VTVT","l":"Delhi","y":2011,"k":58000,"p":5800515,"m":0.18,"b":4756423},{"n":"Honda City 1.5 E MT","l":"Mumbai","y":2010,"k":52000,"p":4359564,"m":0.18,"b":3574843},{"n":"BMW 3 Series 320d","l":"Jaipur","y":2014,"k":80000,"p":26484079,"m":0.12,"b":23305989},{"n":"Maruti Zen Estilo VXI BSIII","l":"Jaipur","y":2006,"k":96000,"p":1949290,"m":0.18,"b":1598418},{"n":"Skoda Superb Elegance 1.8 TSI AT","l":"Delhi","y":2010,"k":63000,"p":8466989,"m":0.18,"b":6942931},{"n":"Audi Q3 2012-2015 35 TDI Quattro Premium","l":"Hyderabad","y":2014,"k":50000,"p":41723267,"m":0.12,"b":36716475},{"n":"Hyundai EON D Lite Plus","l":"Hyderabad","y":2014,"k":15322,"p":4593210,"m":0.12,"b":4042024},{"n":"Honda Brio E MT","l":"Jaipur","y":2012,"k":47000,"p":4942129,"m":0.18,"b":4052546},{"n":"Volkswagen Vento Diesel Highline","l":"Chennai","y":2011,"k":76041,"p":6235582,"m":0.18,"b":5113178},{"n":"Hyundai Accent GLE","l":"Kolkata","y":2009,"k":46000,"p":2294762,"m":0.18,"b":1881704},{"n":"Maruti Celerio ZDi","l":"Bangalore","y":2015,"k":17000,"p":5904170,"m":0.12,"b":5195670},{"n":"Hyundai Grand i10 CRDi Magna","l":"Hyderabad","y":2014,"k":56000,"p":6862635,"m":0.12,"b":6039119},{"n":"Hyundai Getz GVS","l":"Mumbai","y":2005,"k":35000,"p":1791153,"m":0.18,"b":1468745},{"n":"Toyota Innova 2.5 G (Diesel) 7 Seater","l":"Coimbatore","y":2015,"k":54278,"p":19828163,"m":0.12,"b":17448784},{"n":"Audi A6 2011-2015 2.0 TDI Premium Plus","l":"Bangalore","y":2013,"k":40000,"p":34190244,"m":0.12,"b":30087415},{"n":"Ford EcoSport 1.5 Ti VCT AT Titanium","l":"Kolkata","y":2013,"k":41000,"p":7988332,"m":0.12,"b":7029732},{"n":"Honda City ZX GXi","l":"Mumbai","y":2008,"k":88000,"p":3734677,"m":0.18,"b":3062435},{"n":"Maruti Swift Dzire VDi","l":"Delhi","y":2010,"k":70000,"p":3809747,"m":0.18,"b":3123993},{"n":"Volkswagen Polo Petrol Highline 1.2L","l":"Kolkata","y":2011,"k":46279,"p":3601799,"m":0.18,"b":2953475},{"n":"Maruti Ritz LDi","l":"Pune","y":2016,"k":105000,"p":6887485,"m":0.18,"b":5647738},{"n":"Chevrolet Optra Magnum 2.0 LT","l":"Chennai","y":2011,"k":130000,"p":8161935,"m":0.18,"b":6692787},{"n":"Volkswagen Jetta 2013-2015 2.0L TDI Highline","l":"Kolkata","y":2013,"k":54000,"p":9443468,"m":0.12,"b":8310252},{"n":"Ford Figo Diesel Titanium","l":"Jaipur","y":2010,"k":65000,"p":3115078,"m":0.18,"b":2554364},{"n":"Maruti Swift Dzire VXi","l":"Hyderabad","y":2010,"k":70000,"p":5403964,"m":0.18,"b":4431250},{"n":"Mercedes-Benz E-Class 2015-2017 E250 CDI Avantgarde","l":"Pune","y":2015,"k":46000,"p":45834926,"m":0.12,"b":40334735},{"n":"Chevrolet Spark 1.0 LS","l":"Pune","y":2007,"k":113000,"p":1741027,"m":0.18,"b":1427642},{"n":"Hyundai Grand i10 Sportz","l":"Jaipur","y":2016,"k":67310,"p":7082406,"m":0.12,"b":6232517},{"n":"Honda City 1.5 S MT","l":"Jaipur","y":2011,"k":83035,"p":5682660,"m":0.18,"b":4659781},{"n":"Toyota Innova 2.5 G (Diesel) 7 Seater BS IV","l":"Kolkata","y":2015,"k":36983,"p":15009952,"m":0.12,"b":13208758},{"n":"Chevrolet Cruze LTZ","l":"Pune","y":2010,"k":76000,"p":6439327,"m":0.21,"b":5087068},{"n":"Skoda Rapid 1.6 MPI AT Style Plus","l":"Coimbatore","y":2019,"k":14148,"p":16717656,"m":0.12,"b":14711537},{"n":"Maruti Ritz VDi","l":"Kolkata","y":2011,"k":71428,"p":3685989,"m":0.18,"b":3022511},{"n":"Maruti Ritz ZXi","l":"Mumbai","y":2015,"k":10500,"p":6415081,"m":0.12,"b":5645271},{"n":"Honda City 1.5 S AT","l":"Kochi","y":2010,"k":58997,"p":5664132,"m":0.18,"b":4644588},{"n":"Maruti Celerio VXI","l":"Delhi","y":2015,"k":39842,"p":5307525,"m":0.12,"b":4670622},{"n":"Maruti Alto K10 LXI CNG","l":"Kochi","y":2015,"k":47490,"p":5211879,"m":0.12,"b":4586454},{"n":"Tata Indica Vista Aqua 1.2 Safire","l":"Jaipur","y":2009,"k":45000,"p":2377487,"m":0.18,"b":1949539},{"n":"Honda City i VTEC V","l":"Hyderabad","y":2011,"k":80000,"p":7824165,"m":0.18,"b":6415816},{"n":"Toyota Etios Liva Diesel TRD Sportivo","l":"Bangalore","y":2012,"k":56600,"p":7822680,"m":0.18,"b":6414598},{"n":"Skoda Rapid Ultima 1.6 TDI Ambition Plus","l":"Coimbatore","y":2015,"k":55409,"p":10385140,"m":0.12,"b":9138923},{"n":"Maruti SX4 ZXI AT","l":"Mumbai","y":2009,"k":77000,"p":4521610,"m":0.18,"b":3707720},{"n":"Hyundai i20 new Sportz AT 1.4","l":"Bangalore","y":2012,"k":58000,"p":7702021,"m":0.18,"b":6315657},{"n":"Maruti Alto 800 LXI","l":"Coimbatore","y":2016,"k":59491,"p":5514178,"m":0.12,"b":4852477},{"n":"Mahindra Scorpio SLX 2.6 Turbo 8 Str","l":"Hyderabad","y":2007,"k":51000,"p":7384855,"m":0.18,"b":6055581},{"n":"Maruti Baleno Zeta 1.2","l":"Coimbatore","y":2017,"k":18725,"p":11447796,"m":0.12,"b":10074060},{"n":"BMW X3 2.5si","l":"Bangalore","y":2009,"k":92000,"p":14308733,"m":0.18,"b":11733161},{"n":"Maruti Ritz VDi","l":"Coimbatore","y":2013,"k":61450,"p":7290605,"m":0.12,"b":6415733},{"n":"Hyundai EON 1.0 Kappa Magna Plus","l":"Coimbatore","y":2016,"k":18592,"p":6570771,"m":0.12,"b":5782278},{"n":"Chevrolet Enjoy 1.3 TCDi LTZ 7","l":"Bangalore","y":2013,"k":65137,"p":7472087,"m":0.12,"b":6575436},{"n":"Volkswagen Polo Diesel Comfortline 1.2L","l":"Pune","y":2011,"k":83000,"p":4584130,"m":0.18,"b":3758986},{"n":"Hyundai Verna 1.6 CRDi EX AT","l":"Delhi","y":2013,"k":37000,"p":9764523,"m":0.12,"b":8592780},{"n":"Hyundai i10 Magna 1.2","l":"Coimbatore","y":2011,"k":45086,"p":5935949,"m":0.18,"b":4867478},{"n":"Maruti Wagon R VXI BS IV","l":"Bangalore","y":2016,"k":25400,"p":6031672,"m":0.12,"b":5307871},{"n":"Toyota Innova 2.5 G4 Diesel 8-seater","l":"Hyderabad","y":2008,"k":194500,"p":8719437,"m":0.18,"b":7149939},{"n":"Toyota Innova 2.5 V Diesel 8-seater","l":"Pune","y":2014,"k":89000,"p":16340191,"m":0.18,"b":13398956},{"n":"Hyundai Verna 1.4 CX","l":"Kolkata","y":2012,"k":50000,"p":5116083,"m":0.18,"b":4195188},{"n":"Hyundai i20 Sportz AT 1.4","l":"Pune","y":2012,"k":76551,"p":5409506,"m":0.18,"b":4435795},{"n":"Volkswagen Polo 1.2 MPI Highline","l":"Mumbai","y":2017,"k":9700,"p":8793303,"m":0.12,"b":7738106},{"n":"Hyundai Verna 1.6 EX VTVT","l":"Mumbai","y":2013,"k":58000,"p":7919899,"m":0.12,"b":6969511},{"n":"Hyundai i20 Magna Optional 1.2","l":"Kolkata","y":2013,"k":46000,"p":4160258,"m":0.12,"b":3661027},{"n":"Hyundai Elantra CRDi SX","l":"Bangalore","y":2014,"k":72017,"p":12123413,"m":0.12,"b":10668604},{"n":"Ford EcoSport 1.5 TDCi Titanium","l":"Kolkata","y":2015,"k":54407,"p":8047689,"m":0.12,"b":7081966},{"n":"Toyota Innova 2.5 VX (Diesel) 8 Seater","l":"Hyderabad","y":2012,"k":147000,"p":15956334,"m":0.18,"b":13084194},{"n":"Audi Q3 35 TDI Quattro Premium Plus","l":"Jaipur","y":2015,"k":61000,"p":36592870,"m":0.12,"b":32201725},{"n":"Skoda Rapid 1.6 MPI AT Style","l":"Mumbai","y":2016,"k":18856,"p":12778954,"m":0.12,"b":11245480},{"n":"BMW X6 xDrive30d","l":"Hyderabad","y":2011,"k":76000,"p":40375991,"m":0.18,"b":33108312},{"n":"Nissan Micra Diesel XV","l":"Kochi","y":2014,"k":82267,"p":5703989,"m":0.18,"b":4677271},{"n":"Honda City i VTEC CVT VX","l":"Kochi","y":2018,"k":27041,"p":17601571,"m":0.12,"b":15489383},{"n":"Maruti Wagon R VXI Minor","l":"Hyderabad","y":2008,"k":61000,"p":3444043,"m":0.18,"b":2824116},{"n":"Mahindra TUV 300 2015-2019 T8","l":"Kochi","y":2018,"k":28466,"p":12369585,"m":0.12,"b":10885235},{"n":"Hyundai Santro LS zipPlus","l":"Kolkata","y":2002,"k":80000,"p":1106961,"m":0.18,"b":907708},{"n":"Hyundai EON Era Plus","l":"Delhi","y":2013,"k":35373,"p":3597615,"m":0.12,"b":3165901},{"n":"Tata New Safari DICOR 2.2 EX 4x2","l":"Jaipur","y":2014,"k":51000,"p":9995283,"m":0.12,"b":8795849},{"n":"Audi A6 2011-2015 2.0 TDI","l":"Mumbai","y":2013,"k":49000,"p":29985543,"m":0.12,"b":26387278},{"n":"Nissan Sunny Diesel XV","l":"Kolkata","y":2015,"k":41000,"p":7536342,"m":0.12,"b":6631981},{"n":"Toyota Innova 2.5 G4 Diesel 7-seater","l":"Bangalore","y":2011,"k":82831,"p":12841107,"m":0.18,"b":10529708},{"n":"Honda City 1.5 E MT","l":"Mumbai","y":2010,"k":52000,"p":4359564,"m":0.18,"b":3574843},{"n":"Maruti Swift VDI BSIV","l":"Hyderabad","y":2015,"k":39736,"p":9660889,"m":0.12,"b":8501582},{"n":"Renault Duster 110PS Diesel RxL","l":"Mumbai","y":2014,"k":26500,"p":10366059,"m":0.12,"b":9122132},{"n":"Ford Ecosport 1.5 DV5 MT Titanium","l":"Hyderabad","y":2014,"k":34000,"p":11206614,"m":0.12,"b":9861821},{"n":"Honda Brio E MT","l":"Ahmedabad","y":2012,"k":16000,"p":5684514,"m":0.18,"b":4661301},{"n":"Ford Fiesta 1.4 SXi TDCi","l":"Pune","y":2009,"k":134000,"p":4023304,"m":0.18,"b":3299109},{"n":"Mahindra Xylo E8","l":"Bangalore","y":2013,"k":60000,"p":9150998,"m":0.12,"b":8052878},{"n":"Hyundai EON 1.0 Era Plus","l":"Kochi","y":2015,"k":58469,"p":5663670,"m":0.12,"b":4984029},{"n":"Volkswagen Polo Diesel Highline 1.2L","l":"Pune","y":2011,"k":110000,"p":4743102,"m":0.18,"b":3889344},{"n":"Toyota Innova 2.0 V","l":"Pune","y":2013,"k":56000,"p":12883589,"m":0.12,"b":11337558},{"n":"Mahindra Xylo H9","l":"Mumbai","y":2014,"k":101000,"p":9123217,"m":0.18,"b":7481038},{"n":"Hyundai i20 1.2 Magna Executive","l":"Hyderabad","y":2018,"k":13664,"p":11391785,"m":0.12,"b":10024771},{"n":"Renault Duster Adventure Edition","l":"Mumbai","y":2014,"k":65371,"p":9690832,"m":0.12,"b":8527932},{"n":"Hyundai Verna 1.6 CRDI","l":"Bangalore","y":2012,"k":69010,"p":8144296,"m":0.18,"b":6678323},{"n":"Maruti Alto 800 2016-2019 LXI","l":"Kolkata","y":2017,"k":68000,"p":3787033,"m":0.12,"b":3332589},{"n":"Nissan Sunny 2011-2014 Diesel XL","l":"Kolkata","y":2012,"k":45000,"p":5188417,"m":0.18,"b":4254502},{"n":"Maruti Swift Dzire Vdi BSIV","l":"Ahmedabad","y":2017,"k":55945,"p":9692456,"m":0.12,"b":8529361},{"n":"Chevrolet Sail Hatchback LS ABS","l":"Hyderabad","y":2013,"k":70000,"p":5917463,"m":0.12,"b":5207368},{"n":"Maruti Wagon R LXI","l":"Mumbai","y":2014,"k":12000,"p":5059767,"m":0.12,"b":4452595},{"n":"Toyota Corolla Altis VL AT","l":"Coimbatore","y":2019,"k":10660,"p":31754056,"m":0.12,"b":27943569},{"n":"Toyota Etios G","l":"Delhi","y":2012,"k":52052,"p":5236559,"m":0.18,"b":4293979},{"n":"Mercedes-Benz New C-Class 220 CDI AT","l":"Chennai","y":2012,"k":62940,"p":22494017,"m":0.18,"b":18445094},{"n":"Hyundai Santro Xing GL Plus","l":"Kolkata","y":2012,"k":102000,"p":2529507,"m":0.18,"b":2074196},{"n":"Volkswagen Vento Diesel Highline","l":"Chennai","y":2012,"k":60000,"p":7891129,"m":0.18,"b":6470726},{"n":"Nissan Sunny 2011-2014 XL AT Special Edition","l":"Pune","y":2013,"k":66000,"p":7758336,"m":0.12,"b":6827336},{"n":"Honda CR-V 2.4 4WD AT","l":"Chennai","y":2005,"k":135000,"p":4502921,"m":0.21,"b":3557308},{"n":"Honda City 1.5 S AT","l":"Pune","y":2012,"k":72000,"p":8141059,"m":0.18,"b":6675668},{"n":"Mercedes-Benz New C-Class C 220 CDI Celebration Edition","l":"Delhi","y":2014,"k":55000,"p":33343742,"m":0.12,"b":29342493},{"n":"Ford Ecosport 1.0 Ecoboost Titanium","l":"Coimbatore","y":2016,"k":37354,"p":14783752,"m":0.12,"b":13009702},{"n":"BMW 5 Series 2013-2017 520d Luxury Line","l":"Bangalore","y":2015,"k":66508,"p":41454371,"m":0.12,"b":36479846},{"n":"Mercedes-Benz GL-Class 350 CDI Blue Efficiency","l":"Hyderabad","y":2013,"k":88000,"p":61385636,"m":0.18,"b":50336221},{"n":"Toyota Fortuner 4x4 MT TRD Sportivo","l":"Bangalore","y":2012,"k":52000,"p":24249067,"m":0.18,"b":19884235},{"n":"Mercedes-Benz CLA 200 D Sport Edition","l":"Coimbatore","y":2017,"k":41372,"p":39646792,"m":0.12,"b":34889177},{"n":"Maruti Swift VDI BSIV","l":"Kolkata","y":2012,"k":72000,"p":4499703,"m":0.18,"b":3689756},{"n":"Honda Amaze S i-Dtech","l":"Kolkata","y":2013,"k":51637,"p":4993564,"m":0.12,"b":4394337},{"n":"Toyota Corolla Altis G","l":"Mumbai","y":2009,"k":48233,"p":4527726,"m":0.18,"b":3712736},{"n":"Hyundai Grand i10 Asta","l":"Chennai","y":2016,"k":58000,"p":7194591,"m":0.12,"b":6331240},{"n":"Honda Jazz 1.2 V CVT i VTEC","l":"Chennai","y":2015,"k":44550,"p":9123911,"m":0.12,"b":8029041},{"n":"Hyundai Verna 1.6 SX","l":"Ahmedabad","y":2013,"k":60001,"p":9038483,"m":0.12,"b":7953865},{"n":"Toyota Fortuner 4x2 AT","l":"Delhi","y":2014,"k":150000,"p":27069163,"m":0.18,"b":22196714},{"n":"Mercedes-Benz E-Class 2009-2013 E350 CDI Avantgarde","l":"Delhi","y":2015,"k":33000,"p":53796947,"m":0.12,"b":47341314},{"n":"Mahindra TUV 300 P4","l":"Kolkata","y":2016,"k":27000,"p":8565741,"m":0.12,"b":7537852},{"n":"Volkswagen Polo 1.5 TDI Highline","l":"Jaipur","y":2015,"k":62766,"p":8382152,"m":0.12,"b":7376294},{"n":"Maruti Wagon R LXI BS IV","l":"Delhi","y":2010,"k":73575,"p":2771205,"m":0.18,"b":2272388},{"n":"Honda Amaze SX i-DTEC","l":"Pune","y":2015,"k":63000,"p":8071639,"m":0.12,"b":7103042},{"n":"Mercedes-Benz New C-Class C 220 CDI Avantgarde","l":"Bangalore","y":2016,"k":41737,"p":49593345,"m":0.12,"b":43642144},{"n":"Mercedes-Benz New C-Class C 220d Avantgarde Edition C","l":"Coimbatore","y":2018,"k":28358,"p":59374932,"m":0.12,"b":52249940},{"n":"Maruti Ritz VDi ABS","l":"Pune","y":2012,"k":75500,"p":5052444,"m":0.18,"b":4143004},{"n":"Honda Jazz 1.2 VX i VTEC","l":"Mumbai","y":2016,"k":9900,"p":8960359,"m":0.12,"b":7885116},{"n":"Honda Brio S MT","l":"Mumbai","y":2014,"k":17000,"p":6232364,"m":0.12,"b":5484480},{"n":"BMW 5 Series 520d Sedan","l":"Bangalore","y":2009,"k":150000,"p":9906932,"m":0.18,"b":8123684},{"n":"Hyundai Creta 1.4 CRDi S Plus","l":"Bangalore","y":2015,"k":68178,"p":11578663,"m":0.12,"b":10189223},{"n":"Hyundai Getz GLE","l":"Hyderabad","y":2009,"k":52008,"p":4167758,"m":0.18,"b":3417562},{"n":"Chevrolet Beat Diesel LS","l":"Kolkata","y":2013,"k":76000,"p":2870394,"m":0.12,"b":2525947},{"n":"Audi A6 2011-2015 2.0 TDI Premium Plus","l":"Kochi","y":2015,"k":48222,"p":39023256,"m":0.12,"b":34340465},{"n":"Hyundai Xcent 1.2 Kappa SX Option","l":"Delhi","y":2016,"k":100000,"p":6081309,"m":0.18,"b":4986674},{"n":"Maruti Swift Dzire VDi","l":"Delhi","y":2010,"k":68000,"p":3834108,"m":0.18,"b":3143968},{"n":"Maruti Swift 1.3 VXi","l":"Kolkata","y":2015,"k":36009,"p":7260480,"m":0.12,"b":6389223},{"n":"Toyota Fortuner 4x2 AT","l":"Hyderabad","y":2013,"k":142000,"p":29603887,"m":0.18,"b":24275188},{"n":"Volvo S60 D5 Kinetic","l":"Hyderabad","y":2011,"k":70000,"p":28246438,"m":0.18,"b":23162079},{"n":"Hyundai Creta 1.6 CRDi SX","l":"Coimbatore","y":2016,"k":34224,"p":19116841,"m":0.12,"b":16822820},{"n":"Mercedes-Benz E-Class 2009-2013 E250 CDI Avantgarde","l":"Ahmedabad","y":2012,"k":50000,"p":28328557,"m":0.18,"b":23229417},{"n":"Honda Mobilio V i DTEC","l":"Mumbai","y":2015,"k":30000,"p":10461625,"m":0.12,"b":9206230},{"n":"Renault Captur 1.5 Diesel RXL","l":"Bangalore","y":2018,"k":22000,"p":16715342,"m":0.12,"b":14709501},{"n":"Hyundai EON Sportz","l":"Kolkata","y":2017,"k":4000,"p":4528070,"m":0.12,"b":3984701},{"n":"Volvo XC90 2007-2015 D5 AWD","l":"Delhi","y":2014,"k":22230,"p":29392496,"m":0.12,"b":25865396},{"n":"Maruti A-Star AT VXI","l":"Bangalore","y":2011,"k":46000,"p":4326187,"m":0.18,"b":3547474},{"n":"Mercedes-Benz E-Class 2009-2013 E250 CDI Blue Efficiency","l":"Pune","y":2013,"k":88700,"p":30968358,"m":0.18,"b":25394054},{"n":"Hyundai Grand i10 Sportz","l":"Hyderabad","y":2015,"k":56000,"p":8001318,"m":0.12,"b":7041160},{"n":"Audi A3 35 TDI Attraction","l":"Ahmedabad","y":2014,"k":84004,"p":21215348,"m":0.18,"b":17396586},{"n":"BMW 5 Series 2013-2017 530d M Sport","l":"Bangalore","y":2015,"k":16000,"p":61545082,"m":0.12,"b":54159672},{"n":"Mahindra XUV500 W6 2WD","l":"Jaipur","y":2015,"k":85009,"p":16463860,"m":0.18,"b":13500365},{"n":"Ford Ecosport 1.0 Ecoboost Titanium","l":"Mumbai","y":2014,"k":86000,"p":8313638,"m":0.18,"b":6817183},{"n":"Chevrolet Enjoy TCDi LS 7 Seater","l":"Coimbatore","y":2015,"k":93442,"p":8042494,"m":0.18,"b":6594845},{"n":"Mahindra Scorpio S10 8 Seater","l":"Chennai","y":2015,"k":65000,"p":14096672,"m":0.12,"b":12405071},{"n":"Hyundai i20 2015-2017 1.2 Magna","l":"Pune","y":2013,"k":67000,"p":6112431,"m":0.12,"b":5378939},{"n":"Renault Pulse RxZ","l":"Coimbatore","y":2014,"k":31513,"p":7692757,"m":0.12,"b":6769626},{"n":"Maruti Swift Dzire ZDI","l":"Coimbatore","y":2017,"k":75724,"p":9849998,"m":0.12,"b":8667999},{"n":"Hyundai EON Magna Plus","l":"Kolkata","y":2013,"k":69000,"p":2962189,"m":0.12,"b":2606726},{"n":"Nissan Micra XL","l":"Mumbai","y":2010,"k":65000,"p":3289465,"m":0.18,"b":2697361},{"n":"Maruti Swift VXI","l":"Chennai","y":2014,"k":56049,"p":6630346,"m":0.12,"b":5834704},{"n":"Skoda Rapid 1.6 TDI Ambition","l":"Pune","y":2012,"k":96987,"p":6833330,"m":0.18,"b":5603331},{"n":"Fiat Punto 1.4 Emotion","l":"Jaipur","y":2010,"k":65000,"p":2805692,"m":0.21,"b":2216496},{"n":"Hyundai i10 Sportz 1.2","l":"Bangalore","y":2010,"k":69000,"p":4702405,"m":0.18,"b":3855972},{"n":"Honda Jazz 1.5 S i DTEC","l":"Bangalore","y":2015,"k":33500,"p":11271435,"m":0.12,"b":9918863},{"n":"Toyota Innova 2.5 VX (Diesel) 8 Seater","l":"Chennai","y":2012,"k":93000,"p":14714788,"m":0.18,"b":12066126},{"n":"Volvo XC60 D4 SUMMUM","l":"Ahmedabad","y":2013,"k":64000,"p":27146468,"m":0.12,"b":23888891},{"n":"Maruti Ciaz ZDi Plus SHVS","l":"Kochi","y":2017,"k":48045,"p":12399911,"m":0.12,"b":10911921},{"n":"Mitsubishi Pajero 2.8 SFX","l":"Hyderabad","y":2009,"k":94000,"p":13025101,"m":0.18,"b":10680583},{"n":"Maruti Alto LXi","l":"Chennai","y":2011,"k":60000,"p":3114450,"m":0.18,"b":2553849},{"n":"Maruti Swift 1.3 VXi","l":"Pune","y":2010,"k":115000,"p":3739234,"m":0.18,"b":3066172},{"n":"BMW 3 Series 320d","l":"Bangalore","y":2011,"k":56000,"p":21183844,"m":0.18,"b":17370752},{"n":"Hyundai i20 1.4 CRDi Asta","l":"Pune","y":2012,"k":98472,"p":6529055,"m":0.18,"b":5353825},{"n":"Hyundai Creta 1.6 CRDi SX","l":"Hyderabad","y":2016,"k":37800,"p":19043381,"m":0.12,"b":16758175},{"n":"Maruti Omni 5 Seater BSIV","l":"Coimbatore","y":2016,"k":63617,"p":5274038,"m":0.12,"b":4641154},{"n":"Hyundai Verna CRDi SX ABS","l":"Ahmedabad","y":2011,"k":68000,"p":5678504,"m":0.18,"b":4656373},{"n":"Maruti Baleno Sigma 1.2","l":"Kochi","y":2017,"k":11282,"p":11455172,"m":0.12,"b":10080552},{"n":"Honda Amaze S i-Dtech","l":"Chennai","y":2013,"k":75000,"p":6628453,"m":0.12,"b":5833038},{"n":"BMW X3 xDrive20d Advantage Edition","l":"Coimbatore","y":2014,"k":78984,"p":30581003,"m":0.12,"b":26911282},{"n":"Hyundai i10 Magna","l":"Kolkata","y":2011,"k":60000,"p":3352219,"m":0.18,"b":2748819},{"n":"Hyundai Santro Xing XL","l":"Jaipur","y":2007,"k":85000,"p":2064308,"m":0.18,"b":1692733},{"n":"Audi A6 2011-2015 2.0 TDI Premium Plus","l":"Kochi","y":2015,"k":65438,"p":33330195,"m":0.12,"b":29330571},{"n":"Renault Duster 85PS Diesel RxL","l":"Mumbai","y":2014,"k":28215,"p":9487989,"m":0.12,"b":8349430},{"n":"Honda Mobilio RS Option i DTEC","l":"Bangalore","y":2015,"k":38000,"p":12774407,"m":0.12,"b":11241478},{"n":"Volkswagen Polo Petrol Highline 1.2L","l":"Kochi","y":2012,"k":64213,"p":5320975,"m":0.18,"b":4363200},{"n":"Mercedes-Benz S Class 2005 2013 S 350 CDI","l":"Hyderabad","y":2011,"k":82000,"p":52051307,"m":0.18,"b":42682071},{"n":"Hyundai Accent GLX","l":"Pune","y":2009,"k":60000,"p":2609919,"m":0.18,"b":2140133},{"n":"Maruti Swift Dzire VXi","l":"Chennai","y":2012,"k":158000,"p":4979288,"m":0.18,"b":4083016},{"n":"Hyundai i10 Magna","l":"Chennai","y":2007,"k":73000,"p":2866326,"m":0.18,"b":2350387},{"n":"Maruti Ritz VDi","l":"Hyderabad","y":2015,"k":82328,"p":8093465,"m":0.18,"b":6636642},{"n":"Maruti Swift VXI BSIV","l":"Pune","y":2014,"k":85000,"p":6345685,"m":0.18,"b":5203462},{"n":"Renault Duster 110PS Diesel RxL","l":"Jaipur","y":2012,"k":116000,"p":7496432,"m":0.18,"b":6147074},{"n":"Hyundai Santro Xing GLS","l":"Mumbai","y":2008,"k":65000,"p":2181289,"m":0.18,"b":1788657},{"n":"Ford Endeavour 3.0L 4X4 AT","l":"Delhi","y":2012,"k":68000,"p":12535749,"m":0.18,"b":10279314},{"n":"Tata Indica Vista Terra 1.2 Safire BS IV","l":"Kolkata","y":2010,"k":29300,"p":2444899,"m":0.18,"b":2004817},{"n":"Land Rover Discovery Sport TD4 S","l":"Kochi","y":2018,"k":23342,"p":48564518,"m":0.12,"b":42736776},{"n":"BMW 3 Series 320d Sport","l":"Coimbatore","y":2017,"k":41078,"p":42180229,"m":0.12,"b":37118602},{"n":"Volkswagen Vento 1.5 TDI Highline Plus","l":"Chennai","y":2014,"k":38000,"p":11344778,"m":0.12,"b":9983405},{"n":"Tata Indica Vista TDI LS","l":"Hyderabad","y":2013,"k":132000,"p":4900625,"m":0.18,"b":4018512},{"n":"Maruti Alto 800 LXI","l":"Pune","y":2015,"k":35000,"p":4181139,"m":0.12,"b":3679402},{"n":"Ford Figo Diesel LXI","l":"Ahmedabad","y":2012,"k":80000,"p":4272375,"m":0.18,"b":3503348},{"n":"Ford Fiesta 1.4 SXi TDCi","l":"Kolkata","y":2009,"k":39408,"p":2896938,"m":0.18,"b":2375489},{"n":"Honda Jazz 1.2 V i VTEC","l":"Kolkata","y":2015,"k":27525,"p":6938285,"m":0.12,"b":6105691},{"n":"Skoda Rapid 1.5 TDI Ambition","l":"Pune","y":2015,"k":82799,"p":9520465,"m":0.18,"b":7806782},{"n":"Toyota Fortuner 4x2 AT","l":"Mumbai","y":2014,"k":46000,"p":29473098,"m":0.12,"b":25936326},{"n":"Hyundai Verna 1.6 CRDI","l":"Pune","y":2012,"k":98000,"p":7402238,"m":0.18,"b":6069836},{"n":"Hyundai EON Era Plus","l":"Coimbatore","y":2016,"k":47924,"p":5908801,"m":0.12,"b":5199745},{"n":"Ford Ecosport 1.5 Ti VCT AT Titanium","l":"Chennai","y":2013,"k":39000,"p":9856423,"m":0.12,"b":8673652},{"n":"Hyundai Grand i10 Asta Option","l":"Coimbatore","y":2017,"k":33601,"p":10039978,"m":0.12,"b":8835180},{"n":"Toyota Corolla Altis G","l":"Pune","y":2012,"k":54000,"p":8616768,"m":0.18,"b":7065749},{"n":"Volkswagen CrossPolo 1.2 TDI","l":"Hyderabad","y":2013,"k":80020,"p":5852274,"m":0.18,"b":4798864},{"n":"Ford Ikon 1.4 ZXi","l":"Chennai","y":2005,"k":87500,"p":1437639,"m":0.18,"b":1178864},{"n":"Honda Mobilio V i VTEC","l":"Mumbai","y":2015,"k":59500,"p":8572335,"m":0.12,"b":7543655},{"n":"Honda Mobilio S i DTEC","l":"Hyderabad","y":2015,"k":76000,"p":10900756,"m":0.12,"b":9592665},{"n":"Porsche Cayenne Diesel","l":"Bangalore","y":2014,"k":43000,"p":55667275,"m":0.12,"b":48987202},{"n":"Honda Amaze E i-Vtech","l":"Kochi","y":2015,"k":41850,"p":7550206,"m":0.12,"b":6644181},{"n":"Audi A3 35 TDI Premium Plus","l":"Hyderabad","y":2015,"k":52300,"p":30339544,"m":0.12,"b":26698799},{"n":"Mahindra XUV500 W6 2WD","l":"Pune","y":2013,"k":31924,"p":12456753,"m":0.12,"b":10961942},{"n":"Hyundai Verna Transform SX VGT CRDi BS III","l":"Coimbatore","y":2014,"k":77914,"p":10300163,"m":0.12,"b":9064143},{"n":"Ford Ecosport 1.5 DV5 MT Trend","l":"Pune","y":2013,"k":70000,"p":8239364,"m":0.12,"b":7250640},{"n":"Maruti Alto LXi","l":"Chennai","y":2010,"k":94385,"p":2443599,"m":0.18,"b":2003751},{"n":"Renault Pulse RxZ","l":"Jaipur","y":2012,"k":57000,"p":4608956,"m":0.18,"b":3779344},{"n":"Hyundai EON 1.0 Kappa Magna Plus","l":"Coimbatore","y":2016,"k":27039,"p":6798928,"m":0.12,"b":5983057},{"n":"Honda Amaze SX i-VTEC","l":"Delhi","y":2015,"k":11000,"p":7640008,"m":0.12,"b":6723207},{"n":"Toyota Fortuner 3.0 Diesel","l":"Pune","y":2011,"k":124000,"p":18351708,"m":0.18,"b":15048400},{"n":"Maruti SX4 S Cross DDiS 200 Zeta","l":"Mumbai","y":2017,"k":29500,"p":14017953,"m":0.12,"b":12335799},{"n":"Maruti 800 DX","l":"Jaipur","y":2000,"k":75000,"p":839921,"m":0.18,"b":688736},{"n":"Maruti Celerio VXI AT","l":"Coimbatore","y":2015,"k":54186,"p":7008910,"m":0.12,"b":6167841},{"n":"Honda Brio E MT","l":"Mumbai","y":2015,"k":36990,"p":6363450,"m":0.12,"b":5599836},{"n":"Maruti Swift Dzire Vdi BSIV","l":"Hyderabad","y":2016,"k":90000,"p":8935710,"m":0.18,"b":7327282},{"n":"Maruti A-Star Vxi","l":"Jaipur","y":2009,"k":87000,"p":2593696,"m":0.18,"b":2126831},{"n":"Maruti Swift VDI","l":"Kochi","y":2015,"k":58634,"p":8199988,"m":0.12,"b":7215989},{"n":"Nissan Sunny Diesel XV","l":"Kochi","y":2013,"k":41377,"p":7045526,"m":0.12,"b":6200063},{"n":"Hyundai EON Magna Plus","l":"Jaipur","y":2015,"k":43000,"p":4139367,"m":0.12,"b":3642643},{"n":"Honda Amaze S i-Vtech","l":"Kochi","y":2015,"k":77372,"p":7013420,"m":0.12,"b":6171810},{"n":"Ford Fiesta 1.4 Duratec EXI Limited Edition","l":"Chennai","y":2006,"k":49000,"p":2492433,"m":0.18,"b":2043795},{"n":"Honda City i VTEC CVT VX","l":"Delhi","y":2015,"k":48000,"p":12116538,"m":0.12,"b":10662553},{"n":"Honda Brio S MT","l":"Hyderabad","y":2012,"k":30000,"p":6124667,"m":0.18,"b":5022227},{"n":"Maruti Wagon R VXI BS IV","l":"Kolkata","y":2012,"k":47000,"p":3543274,"m":0.18,"b":2905484},{"n":"Hyundai Elantra CRDi SX AT","l":"Jaipur","y":2016,"k":76681,"p":16318223,"m":0.12,"b":14360036},{"n":"Honda Accord 2.4 Elegance A/T","l":"Mumbai","y":2010,"k":106565,"p":7142311,"m":0.18,"b":5856695},{"n":"Chevrolet Cruze LTZ","l":"Coimbatore","y":2014,"k":72843,"p":11579553,"m":0.12,"b":10190006},{"n":"Hyundai i20 1.2 Era","l":"Kochi","y":2013,"k":55653,"p":6363401,"m":0.12,"b":5599793},{"n":"Tata Nano Cx BSIV","l":"Ahmedabad","y":2013,"k":35000,"p":1805993,"m":0.12,"b":1589274},{"n":"Ford Ecosport 1.5 Ti VCT MT Trend","l":"Delhi","y":2014,"k":44000,"p":9015284,"m":0.12,"b":7933450},{"n":"Tata Indica Vista TDI LS","l":"Pune","y":2012,"k":43200,"p":4720217,"m":0.18,"b":3870578},{"n":"Skoda Octavia Classic 1.9 TDI MT","l":"Jaipur","y":2005,"k":117000,"p":2857112,"m":0.18,"b":2342832},{"n":"Hyundai Xcent 1.2 Kappa S Option","l":"Pune","y":2016,"k":34000,"p":7665310,"m":0.12,"b":6745473},{"n":"Hyundai i20 Magna 1.2","l":"Kolkata","y":2015,"k":35000,"p":6528052,"m":0.12,"b":5744686},{"n":"Hyundai i20 Sportz 1.2","l":"Mumbai","y":2013,"k":43000,"p":5656951,"m":0.12,"b":4978117},{"n":"Hyundai i10 Magna","l":"Hyderabad","y":2008,"k":63193,"p":4274161,"m":0.18,"b":3504812},{"n":"Toyota Innova 2.5 G4 Diesel 8-seater","l":"Bangalore","y":2008,"k":110000,"p":9158666,"m":0.18,"b":7510106},{"n":"Maruti SX4 Vxi BSIV","l":"Kochi","y":2011,"k":44547,"p":5007179,"m":0.18,"b":4105886},{"n":"Honda City 1.5 E MT","l":"Ahmedabad","y":2011,"k":65000,"p":6817805,"m":0.18,"b":5590600},{"n":"Maruti Ritz LXi","l":"Mumbai","y":2012,"k":79000,"p":4723080,"m":0.18,"b":3872926},{"n":"Hyundai i20 2015-2017 Sportz AT 1.4","l":"Pune","y":2014,"k":108000,"p":7407137,"m":0.18,"b":6073852},{"n":"Toyota Innova Crysta 2.4 G MT 8S","l":"Kochi","y":2018,"k":21302,"p":26942509,"m":0.12,"b":23709407},{"n":"Maruti Swift VDI Optional","l":"Pune","y":2014,"k":82000,"p":7656648,"m":0.18,"b":6278451},{"n":"Toyota Innova 2.5 GX (Diesel) 8 Seater","l":"Chennai","y":2014,"k":173000,"p":15729006,"m":0.18,"b":12897785},{"n":"Mahindra Quanto C2","l":"Jaipur","y":2013,"k":72000,"p":6584537,"m":0.12,"b":5794392},{"n":"Mahindra XUV500 W8 4WD","l":"Bangalore","y":2014,"k":50299,"p":14742852,"m":0.12,"b":12973710},{"n":"Audi A6 2011-2015 2.0 TDI Premium Plus","l":"Kolkata","y":2014,"k":60000,"p":27703317,"m":0.12,"b":24378919},{"n":"Toyota Fortuner 3.0 Diesel","l":"Kolkata","y":2011,"k":112999,"p":14795748,"m":0.18,"b":12132514},{"n":"Toyota Innova 2.5 G4 Diesel 7-seater","l":"Pune","y":2010,"k":183000,"p":9752795,"m":0.18,"b":7997292},{"n":"Jaguar XF 2.2 Litre Luxury","l":"Coimbatore","y":2016,"k":58840,"p":56822925,"m":0.12,"b":50004174},{"n":"Hyundai Verna 1.6 EX VTVT","l":"Kolkata","y":2014,"k":58000,"p":7758878,"m":0.12,"b":6827812},{"n":"Hyundai i20 1.4 CRDi Magna","l":"Jaipur","y":2011,"k":78000,"p":4581327,"m":0.18,"b":3756689},{"n":"Hyundai i10 Sportz 1.2","l":"Hyderabad","y":2012,"k":54982,"p":5431261,"m":0.18,"b":4453634},{"n":"Maruti Alto LXi","l":"Jaipur","y":2008,"k":65000,"p":1752523,"m":0.18,"b":1437069},{"n":"Hyundai Grand i10 Sportz","l":"Mumbai","y":2015,"k":11206,"p":6990871,"m":0.12,"b":6151966},{"n":"Hyundai Grand i10 AT Asta","l":"Pune","y":2015,"k":32100,"p":7499736,"m":0.12,"b":6599768},{"n":"Hyundai i20 Magna 1.4 CRDi","l":"Kolkata","y":2015,"k":36113,"p":7716707,"m":0.12,"b":6790703},{"n":"Volvo S80 D5","l":"Delhi","y":2011,"k":87000,"p":16828282,"m":0.18,"b":13799191},{"n":"Honda City i VTEC CVT VX","l":"Hyderabad","y":2015,"k":39822,"p":14355394,"m":0.12,"b":12632747},{"n":"Maruti Swift VXI BSIII","l":"Hyderabad","y":2008,"k":81814,"p":4297171,"m":0.18,"b":3523681},{"n":"Hyundai Creta 1.6 SX Plus Diesel","l":"Chennai","y":2016,"k":62000,"p":16570307,"m":0.12,"b":14581870},{"n":"Maruti Swift Dzire VDI","l":"Pune","y":2017,"k":71000,"p":8172117,"m":0.12,"b":7191463},{"n":"Honda Jazz 1.2 V CVT i VTEC","l":"Coimbatore","y":2019,"k":10452,"p":14236365,"m":0.12,"b":12528001},{"n":"Honda Brio S MT","l":"Chennai","y":2013,"k":35315,"p":5367786,"m":0.12,"b":4723652},{"n":"Maruti Swift VDI BSIV","l":"Hyderabad","y":2014,"k":91722,"p":8276560,"m":0.18,"b":6786779},{"n":"Hyundai i20 1.2 Sportz Option","l":"Pune","y":2011,"k":35976,"p":4840586,"m":0.18,"b":3969281},{"n":"Hyundai Grand i10 Asta Option","l":"Pune","y":2014,"k":25000,"p":6167157,"m":0.12,"b":5427098},{"n":"Maruti Alto LXI","l":"Hyderabad","y":2010,"k":54486,"p":3406635,"m":0.18,"b":2793440},{"n":"Tata Manza Aqua Safire","l":"Kolkata","y":2010,"k":16000,"p":2756073,"m":0.18,"b":2259980},{"n":"Tata Nano XTA","l":"Coimbatore","y":2017,"k":31176,"p":5367901,"m":0.12,"b":4723753},{"n":"BMW X1 sDrive20d","l":"Jaipur","y":2012,"k":88375,"p":22266405,"m":0.18,"b":18258452},{"n":"Maruti Wagon R AMT VXI","l":"Jaipur","y":2017,"k":34500,"p":6358403,"m":0.12,"b":5595394},{"n":"Toyota Fortuner 4x4 MT","l":"Hyderabad","y":2012,"k":80000,"p":25202295,"m":0.18,"b":20665882},{"n":"Volkswagen Polo Diesel Trendline 1.2L","l":"Delhi","y":2013,"k":46000,"p":5241396,"m":0.12,"b":4612428},{"n":"Honda Civic 2010-2013 1.8 V AT","l":"Mumbai","y":2009,"k":70000,"p":4404512,"m":0.21,"b":3479564},{"n":"BMW 7 Series 2007-2012 730Ld","l":"Hyderabad","y":2009,"k":51000,"p":45076520,"m":0.18,"b":36962747},{"n":"Mahindra XUV500 AT W10 FWD","l":"Delhi","y":2017,"k":25000,"p":29982802,"m":0.12,"b":26384866},{"n":"Hyundai Elantra SX AT","l":"Coimbatore","y":2017,"k":25132,"p":33956571,"m":0.12,"b":29881782},{"n":"Toyota Corolla Altis G","l":"Delhi","y":2011,"k":70000,"p":6811935,"m":0.18,"b":5585787},{"n":"Maruti Alto 800 2016-2019 LXI","l":"Kochi","y":2015,"k":48913,"p":4531370,"m":0.12,"b":3987606},{"n":"Maruti Alto LXi","l":"Jaipur","y":2011,"k":90000,"p":2551843,"m":0.18,"b":2092511},{"n":"Honda Brio S MT","l":"Chennai","y":2013,"k":55000,"p":5567618,"m":0.12,"b":4899503},{"n":"Volkswagen Polo Petrol Comfortline 1.2L","l":"Mumbai","y":2013,"k":51000,"p":5551659,"m":0.12,"b":4885460},{"n":"Maruti Ritz ZXi","l":"Pune","y":2012,"k":35844,"p":4853103,"m":0.18,"b":3979544},{"n":"Nissan 370Z AT","l":"Kolkata","y":2012,"k":14850,"p":80142776,"m":0.18,"b":65717076},{"n":"Audi A6 2011-2015 2.0 TDI","l":"Hyderabad","y":2014,"k":98000,"p":33995285,"m":0.18,"b":27876133},{"n":"Hyundai i20 Asta 1.2","l":"Mumbai","y":2015,"k":17000,"p":8277234,"m":0.12,"b":7283965},{"n":"Hyundai Verna 1.6 CRDI","l":"Mumbai","y":2013,"k":42670,"p":9630799,"m":0.12,"b":8475103},{"n":"BMW 6 Series Gran Coupe","l":"Kochi","y":2014,"k":33128,"p":97211488,"m":0.12,"b":85546110},{"n":"Hyundai i20 1.4 Sportz","l":"Kolkata","y":2016,"k":53416,"p":8868662,"m":0.12,"b":7804423},{"n":"Toyota Etios G","l":"Chennai","y":2011,"k":47000,"p":4804408,"m":0.18,"b":3939614},{"n":"Hyundai Sonata Embera 2.0L CRDi MT","l":"Ahmedabad","y":2008,"k":72002,"p":6745691,"m":0.18,"b":5531467},{"n":"Audi A6 2011-2015 35 TDI Technology","l":"Coimbatore","y":2016,"k":47634,"p":49881246,"m":0.12,"b":43895497},{"n":"Volkswagen Polo 1.2 MPI Highline","l":"Ahmedabad","y":2015,"k":62000,"p":7002982,"m":0.12,"b":6162624},{"n":"Ford Classic 1.4 Duratorq CLXI","l":"Chennai","y":2013,"k":65000,"p":5329544,"m":0.12,"b":4689999},{"n":"Renault Koleos 4X2 MT","l":"Hyderabad","y":2014,"k":92448,"p":15086166,"m":0.18,"b":12370656},{"n":"Ford Ecosport 1.5 DV5 MT Ambiente","l":"Chennai","y":2014,"k":68000,"p":9528131,"m":0.12,"b":8384755},{"n":"Land Rover Freelander 2 TD4 SE","l":"Mumbai","y":2011,"k":87000,"p":18289470,"m":0.18,"b":14997366},{"n":"Honda Amaze E i-DTEC","l":"Pune","y":2016,"k":108000,"p":7892170,"m":0.18,"b":6471579},{"n":"Volvo V40 Cross Country D3","l":"Chennai","y":2015,"k":60000,"p":23622640,"m":0.12,"b":20787923},{"n":"Hyundai i10 Magna","l":"Chennai","y":2011,"k":82000,"p":4184554,"m":0.18,"b":3431334},{"n":"Ford Figo 1.2P Titanium MT","l":"Jaipur","y":2016,"k":26189,"p":7394529,"m":0.12,"b":6507186},{"n":"Maruti Ciaz VDi Option SHVS","l":"Jaipur","y":2016,"k":26300,"p":12174142,"m":0.12,"b":10713245},{"n":"Toyota Fortuner 4x2 AT TRD Sportivo","l":"Mumbai","y":2016,"k":35000,"p":38677246,"m":0.12,"b":34035976},{"n":"Tata Indica Vista Terra Quadrajet 1.3L BS IV","l":"Pune","y":2010,"k":67000,"p":3981968,"m":0.18,"b":3265214},{"n":"Hyundai EON Magna","l":"Jaipur","y":2012,"k":42285,"p":3366652,"m":0.18,"b":2760655},{"n":"Mahindra KUV 100 mFALCON G80 K6 Plus","l":"Kolkata","y":2017,"k":7000,"p":7178037,"m":0.12,"b":6316673},{"n":"Hyundai i20 1.2 Spotz","l":"Pune","y":2016,"k":42000,"p":8741255,"m":0.12,"b":7692304},{"n":"Hyundai Santro Xing GLS","l":"Kochi","y":2015,"k":56967,"p":5599295,"m":0.12,"b":4927380},{"n":"Maruti Wagon R Stingray LXI","l":"Kochi","y":2015,"k":41836,"p":5831096,"m":0.12,"b":5131365},{"n":"Tata Indica Vista Aura 1.3 Quadrajet","l":"Kolkata","y":2009,"k":134000,"p":2358673,"m":0.18,"b":1934112},{"n":"Hyundai Elite i20 Petrol Sportz","l":"Delhi","y":2018,"k":8321,"p":8532370,"m":0.12,"b":7508486},{"n":"Tata Indica Vista TDI LS","l":"Pune","y":2015,"k":174000,"p":5131530,"m":0.18,"b":4207855},{"n":"Toyota Qualis FS B3","l":"Pune","y":2002,"k":119613,"p":3479629,"m":0.18,"b":2853296},{"n":"Maruti Swift Dzire LXI","l":"Chennai","y":2017,"k":21000,"p":9858669,"m":0.12,"b":8675629},{"n":"Volkswagen Vento 1.5 TDI Highline","l":"Mumbai","y":2015,"k":55600,"p":8679915,"m":0.12,"b":7638325},{"n":"Honda Brio S MT","l":"Pune","y":2013,"k":38428,"p":5266056,"m":0.12,"b":4634129},{"n":"BMW 5 Series 520d Sedan","l":"Chennai","y":2009,"k":95000,"p":10243577,"m":0.18,"b":8399733},{"n":"Hyundai i20 1.2 Asta","l":"Mumbai","y":2012,"k":18000,"p":5992776,"m":0.18,"b":4914076},{"n":"Ford Endeavour 2.2 Titanium AT 4X2","l":"Chennai","y":2019,"k":7000,"p":49189314,"m":0.12,"b":43286597},{"n":"Hyundai i20 1.2 Asta","l":"Kochi","y":2016,"k":24779,"p":8341675,"m":0.12,"b":7340674},{"n":"Mahindra Scorpio VLS 2.2 mHawk","l":"Chennai","y":2008,"k":88000,"p":6669175,"m":0.18,"b":5468723},{"n":"Maruti Ciaz VDi","l":"Ahmedabad","y":2015,"k":24000,"p":10636402,"m":0.12,"b":9360034},{"n":"Maruti Ciaz 1.4 Zeta","l":"Mumbai","y":2017,"k":15000,"p":13231316,"m":0.12,"b":11643558},{"n":"Toyota Etios GD","l":"Kolkata","y":2013,"k":60000,"p":5929998,"m":0.12,"b":5218398},{"n":"Mahindra XUV500 W8 4WD","l":"Hyderabad","y":2013,"k":83503,"p":14106982,"m":0.18,"b":11567725},{"n":"Chevrolet Cruze LTZ","l":"Mumbai","y":2011,"k":69000,"p":7423066,"m":0.18,"b":6086914},{"n":"Hyundai EON D Lite Plus Option","l":"Kolkata","y":2018,"k":54000,"p":4616106,"m":0.12,"b":4062174},{"n":"Maruti Ritz VDi","l":"Bangalore","y":2013,"k":49000,"p":7212319,"m":0.12,"b":6346841},{"n":"Toyota Etios Liva GD","l":"Hyderabad","y":2013,"k":86000,"p":9289905,"m":0.18,"b":7617722},{"n":"Ford EcoSport 1.5 Ti VCT MT Titanium","l":"Coimbatore","y":2018,"k":12899,"p":16474927,"m":0.12,"b":14497936},{"n":"Maruti Swift VVT ZXI","l":"Pune","y":2012,"k":46972,"p":5220329,"m":0.18,"b":4280669},{"n":"Toyota Etios Liva V","l":"Kochi","y":2012,"k":59311,"p":5585964,"m":0.18,"b":4580490},{"n":"Honda CR-V 2.4 AT","l":"Ahmedabad","y":2010,"k":90000,"p":9536141,"m":0.21,"b":7533552},{"n":"Hyundai Creta 1.6 CRDi AT SX Plus","l":"Kochi","y":2017,"k":60739,"p":16088337,"m":0.12,"b":14157737},{"n":"Fiat Abarth 595 Competizione","l":"Mumbai","y":2017,"k":19476,"p":30183509,"m":0.12,"b":26561488},{"n":"Ford Ecosport 1.0 Ecoboost Platinum Edition","l":"Mumbai","y":2017,"k":15000,"p":13528429,"m":0.12,"b":11905017},{"n":"Jaguar XF 3.0 Litre S Premium Luxury","l":"Hyderabad","y":2011,"k":53000,"p":37029956,"m":0.18,"b":30364564},{"n":"Hyundai Grand i10 Sportz","l":"Chennai","y":2016,"k":20000,"p":7488724,"m":0.12,"b":6590077},{"n":"Mercedes-Benz M-Class ML 320 CDI","l":"Hyderabad","y":2008,"k":67000,"p":19433987,"m":0.18,"b":15935869},{"n":"Toyota Innova 2.5 V Diesel 7-seater","l":"Bangalore","y":2009,"k":140000,"p":10943479,"m":0.18,"b":8973653},{"n":"Honda Accord 2.4 AT","l":"Delhi","y":2011,"k":25000,"p":12885329,"m":0.18,"b":10565969},{"n":"Maruti Wagon R LXI","l":"Jaipur","y":2007,"k":69000,"p":2173474,"m":0.18,"b":1782248},{"n":"Hyundai i20 1.4 CRDi Magna","l":"Hyderabad","y":2013,"k":65461,"p":8103546,"m":0.12,"b":7131121},{"n":"Maruti Swift VXI","l":"Kolkata","y":2014,"k":33000,"p":5438671,"m":0.12,"b":4786030},{"n":"Honda City 1.5 E MT","l":"Ahmedabad","y":2011,"k":52000,"p":6668856,"m":0.18,"b":5468462},{"n":"Volkswagen Polo 1.2 MPI Comfortline","l":"Kochi","y":2015,"k":29215,"p":7150169,"m":0.12,"b":6292149},{"n":"Hyundai Accent Executive LPG","l":"Jaipur","y":2010,"k":40000,"p":2958937,"m":0.18,"b":2426328},{"n":"ISUZU D-MAX V-Cross 4X4","l":"Jaipur","y":2017,"k":290000,"p":12740740,"m":0.18,"b":10447407},{"n":"Maruti Swift Dzire Tour LDI","l":"Jaipur","y":2012,"k":350000,"p":4538221,"m":0.18,"b":3721341},{"n":"Honda Mobilio V i DTEC","l":"Kolkata","y":2014,"k":39000,"p":7740230,"m":0.12,"b":6811402},{"n":"Maruti Ertiga VXI","l":"Coimbatore","y":2016,"k":40130,"p":11926423,"m":0.12,"b":10495252},{"n":"Mercedes-Benz B Class 2012-2015 B200 Sport CDI","l":"Bangalore","y":2013,"k":43000,"p":24977881,"m":0.12,"b":21980535},{"n":"Maruti Eeco 5 STR With AC Plus HTR CNG","l":"Mumbai","y":2017,"k":15500,"p":7040017,"m":0.12,"b":6195215},{"n":"Maruti Versa DX2","l":"Bangalore","y":2006,"k":98245,"p":3144516,"m":0.21,"b":2484168},{"n":"Honda City i DTEC SV","l":"Delhi","y":2014,"k":36390,"p":8802090,"m":0.12,"b":7745839},{"n":"Maruti Swift Dzire 1.2 Lxi BSIV","l":"Mumbai","y":2010,"k":122000,"p":3505337,"m":0.18,"b":2874376},{"n":"Volkswagen Vento Diesel Trendline","l":"Ahmedabad","y":2013,"k":79003,"p":7772582,"m":0.12,"b":6839872},{"n":"Skoda Laura 1.9 TDI AT Ambiente","l":"Kochi","y":2013,"k":78830,"p":11914467,"m":0.12,"b":10484731},{"n":"Honda Brio V MT","l":"Mumbai","y":2011,"k":53000,"p":4026433,"m":0.18,"b":3301675},{"n":"Maruti A-Star Vxi","l":"Chennai","y":2009,"k":53000,"p":3062584,"m":0.18,"b":2511319},{"n":"Maruti SX4 VDI","l":"Jaipur","y":2011,"k":82000,"p":3860409,"m":0.18,"b":3165536},{"n":"Maruti Alto LX","l":"Pune","y":2004,"k":70332,"p":1243284,"m":0.21,"b":982194},{"n":"Ford Ecosport 1.5 DV5 MT Titanium Optional","l":"Kochi","y":2015,"k":63402,"p":9910187,"m":0.12,"b":8720965},{"n":"Honda City i DTec SV","l":"Kolkata","y":2017,"k":13000,"p":11156605,"m":0.12,"b":9817812},{"n":"Mercedes-Benz New C-Class C 250 CDI Elegance","l":"Pune","y":2010,"k":65505,"p":17537032,"m":0.18,"b":14380366},{"n":"Hyundai Sonata Embera 2.4L MT","l":"Pune","y":2006,"k":154000,"p":4112821,"m":0.21,"b":3249129},{"n":"Chevrolet Spark 1.0 LS","l":"Bangalore","y":2008,"k":85142,"p":2845785,"m":0.18,"b":2333544},{"n":"Volkswagen Polo 1.2 MPI Highline","l":"Jaipur","y":2016,"k":45000,"p":6996855,"m":0.12,"b":6157233},{"n":"Hyundai i10 Sportz 1.2","l":"Delhi","y":2011,"k":48000,"p":3718036,"m":0.18,"b":3048789},{"n":"Toyota Etios Liva G","l":"Delhi","y":2012,"k":77800,"p":4899736,"m":0.18,"b":4017784},{"n":"Honda CR-V 2.4 AT","l":"Kochi","y":2011,"k":100922,"p":12126692,"m":0.18,"b":9943888},{"n":"Hyundai Verna 1.6 VTVT EX AT","l":"Chennai","y":2013,"k":55000,"p":9391554,"m":0.12,"b":8264567},{"n":"Mercedes-Benz New C-Class C 250 CDI Elegance","l":"Hyderabad","y":2011,"k":45000,"p":30615931,"m":0.18,"b":25105064},{"n":"Honda Amaze VX CVT i-VTEC","l":"Jaipur","y":2017,"k":145000,"p":8649034,"m":0.18,"b":7092208},{"n":"Mahindra Xylo E8","l":"Kolkata","y":2011,"k":45000,"p":5010659,"m":0.18,"b":4108741},{"n":"Hyundai Sonata Transform 2.4 GDi AT","l":"Bangalore","y":2012,"k":44000,"p":14298800,"m":0.18,"b":11725016},{"n":"Hyundai Creta 1.4 CRDi S Plus","l":"Bangalore","y":2015,"k":48000,"p":11630009,"m":0.12,"b":10234408},{"n":"Toyota Innova 2.5 G4 Diesel 7-seater","l":"Kochi","y":2011,"k":64139,"p":11651713,"m":0.18,"b":9554405},{"n":"Honda Jazz 2020 Petrol","l":"Kochi","y":2019,"k":11574,"p":12733009,"m":0.12,"b":11205048},{"n":"Maruti Alto 800 CNG LXI","l":"Kolkata","y":2013,"k":14311,"p":3493967,"m":0.12,"b":3074691},{"n":"Hyundai i20 Magna 1.2","l":"Bangalore","y":2016,"k":20000,"p":9571617,"m":0.12,"b":8423023},{"n":"Hyundai i20 1.4 Sportz","l":"Kochi","y":2019,"k":17964,"p":14716459,"m":0.12,"b":12950484},{"n":"Toyota Fortuner 4x2 4 Speed AT","l":"Hyderabad","y":2012,"k":55500,"p":27677590,"m":0.18,"b":22695623},{"n":"Mahindra Scorpio VLX 2WD Airbag BSIII","l":"Chennai","y":2008,"k":130000,"p":6805789,"m":0.18,"b":5580747},{"n":"Volkswagen Polo 1.2 MPI Highline","l":"Mumbai","y":2015,"k":49830,"p":6448958,"m":0.12,"b":5675083},{"n":"BMW 5 Series 2003-2012 520d","l":"Kolkata","y":2009,"k":49000,"p":14500164,"m":0.18,"b":11890134},{"n":"Ford Ecosport 1.5 DV5 MT Ambiente","l":"Kolkata","y":2013,"k":53967,"p":6504713,"m":0.12,"b":5724148},{"n":"Maruti SX4 Zxi BSIII","l":"Mumbai","y":2011,"k":54000,"p":4894544,"m":0.18,"b":4013526},{"n":"Hyundai i20 1.4 Asta AT (O) with Sunroof","l":"Hyderabad","y":2009,"k":75000,"p":4231809,"m":0.18,"b":3470084},{"n":"Hyundai Xcent 1.1 CRDi S","l":"Pune","y":2016,"k":100000,"p":6848320,"m":0.18,"b":5615622},{"n":"Renault Lodgy 110PS RxL","l":"Chennai","y":2015,"k":142000,"p":10887154,"m":0.18,"b":8927466},{"n":"Renault Duster 110PS Diesel RxZ","l":"Jaipur","y":2012,"k":83388,"p":6679000,"m":0.18,"b":5476780},{"n":"Maruti Swift Dzire VXi","l":"Delhi","y":2012,"k":62000,"p":5049742,"m":0.18,"b":4140789},{"n":"Honda City i DTec VX","l":"Kolkata","y":2016,"k":61000,"p":8817653,"m":0.12,"b":7759535},{"n":"Audi A4 3.0 TDI Quattro Premium","l":"Bangalore","y":2011,"k":45000,"p":32665508,"m":0.18,"b":26785716},{"n":"Mercedes-Benz E-Class 250 D W 124","l":"Bangalore","y":2013,"k":33000,"p":17348233,"m":0.12,"b":15266445},{"n":"Toyota Innova 2.5 LE 2014 Diesel 8 Seater","l":"Pune","y":2014,"k":113565,"p":16386605,"m":0.18,"b":13437016},{"n":"Volkswagen Jetta 2007-2011 2.0 TDI Trendline","l":"Hyderabad","y":2008,"k":131000,"p":5107016,"m":0.18,"b":4187753},{"n":"Maruti Swift Dzire VXI","l":"Coimbatore","y":2016,"k":46346,"p":10030199,"m":0.12,"b":8826575},{"n":"Honda City 1.5 V MT","l":"Hyderabad","y":2016,"k":37000,"p":13435078,"m":0.12,"b":11822869},{"n":"Tata Indigo CS eVX","l":"Pune","y":2016,"k":98500,"p":3953109,"m":0.18,"b":3241550},{"n":"Maruti Baleno Zeta 1.3","l":"Ahmedabad","y":2015,"k":71588,"p":8843675,"m":0.12,"b":7782434},{"n":"Maruti Alto 800 2016-2019 LXI","l":"Ahmedabad","y":2014,"k":68000,"p":3634606,"m":0.12,"b":3198453},{"n":"Mercedes-Benz E-Class E240 V6 AT","l":"Mumbai","y":2003,"k":66800,"p":7621534,"m":0.18,"b":6249658},{"n":"Maruti Swift Dzire Vdi BSIV","l":"Chennai","y":2016,"k":90000,"p":9124209,"m":0.18,"b":7481851},{"n":"Nissan Terrano XE 85 PS","l":"Jaipur","y":2013,"k":54000,"p":7536301,"m":0.12,"b":6631945},{"n":"Mercedes-Benz New C-Class C 200 CGI","l":"Mumbai","y":2011,"k":87248,"p":14426969,"m":0.18,"b":11830115},{"n":"Maruti Celerio VXI","l":"Pune","y":2017,"k":9052,"p":6142954,"m":0.12,"b":5405799},{"n":"Hyundai Santro Xing GLS","l":"Delhi","y":2014,"k":67320,"p":4355499,"m":0.12,"b":3832839},{"n":"Volkswagen Polo 1.2 MPI Highline","l":"Kochi","y":2018,"k":28635,"p":8768154,"m":0.12,"b":7715975},{"n":"BMW 5 Series 2013-2017 530d M Sport","l":"Kochi","y":2018,"k":16409,"p":71670434,"m":0.12,"b":63069982},{"n":"Honda City 1.5 V MT Sunroof","l":"Delhi","y":2012,"k":61180,"p":6888219,"m":0.18,"b":5648339},{"n":"Hyundai i20 Sportz 1.2","l":"Delhi","y":2014,"k":59577,"p":5979947,"m":0.12,"b":5262354},{"n":"Toyota Innova 2.5 GX (Diesel) 8 Seater BS IV","l":"Mumbai","y":2016,"k":24104,"p":17713798,"m":0.12,"b":15588142},{"n":"BMW 5 Series 2007-2010 525d Sedan","l":"Mumbai","y":2008,"k":69000,"p":10575321,"m":0.21,"b":8354504},{"n":"Volkswagen Polo GT TSI","l":"Bangalore","y":2015,"k":35000,"p":10430579,"m":0.12,"b":9178909},{"n":"Maruti Ertiga VXI","l":"Jaipur","y":2014,"k":98000,"p":8299222,"m":0.18,"b":6805362},{"n":"Audi A6 2011-2015 2.0 TDI Technology","l":"Chennai","y":2014,"k":51843,"p":32338104,"m":0.15,"b":27487388},{"n":"Maruti Swift Dzire VDI","l":"Jaipur","y":2013,"k":80000,"p":5829385,"m":0.12,"b":5129859},{"n":"Toyota Fortuner 3.0 Diesel","l":"Pune","y":2009,"k":110000,"p":11689393,"m":0.21,"b":9234621},{"n":"Hyundai i10 Sportz 1.1L","l":"Kochi","y":2015,"k":75383,"p":5769369,"m":0.12,"b":5077045},{"n":"Mahindra TUV 300 2015-2019 T8 AMT","l":"Kochi","y":2017,"k":31861,"p":16451763,"m":0.12,"b":14477551},{"n":"Mercedes-Benz New C-Class C 220 CDI CLASSIC","l":"Mumbai","y":2011,"k":57900,"p":14688452,"m":0.18,"b":12044531},{"n":"Maruti Swift Dzire Ldi BSIV","l":"Delhi","y":2014,"k":48000,"p":6880136,"m":0.12,"b":6054519},{"n":"Hyundai i20 Magna","l":"Kochi","y":2015,"k":33544,"p":7922319,"m":0.12,"b":6971641},{"n":"Maruti Swift VDI BSIV","l":"Chennai","y":2015,"k":65000,"p":8325127,"m":0.12,"b":7326112},{"n":"Toyota Etios V","l":"Kochi","y":2017,"k":35007,"p":10518381,"m":0.12,"b":9256175},{"n":"Toyota Corolla Altis Diesel D4DG","l":"Pune","y":2010,"k":98000,"p":5354447,"m":0.18,"b":4390646},{"n":"Maruti SX4 ZDI","l":"Coimbatore","y":2015,"k":65636,"p":9594539,"m":0.12,"b":8443194},{"n":"Audi A6 2011-2015 35 TDI Premium","l":"Kochi","y":2015,"k":21730,"p":40593288,"m":0.12,"b":35722094},{"n":"Honda Amaze S i-Vtech","l":"Chennai","y":2013,"k":46112,"p":5912087,"m":0.12,"b":5202637},{"n":"Hyundai i20 Magna 1.2","l":"Kolkata","y":2015,"k":20000,"p":6675657,"m":0.12,"b":5874579},{"n":"Mahindra XUV500 W6 2WD","l":"Hyderabad","y":2013,"k":67000,"p":14021676,"m":0.12,"b":12339075},{"n":"Mercedes-Benz E-Class 2015-2017 E250 CDI Avantgarde","l":"Ahmedabad","y":2016,"k":29000,"p":57438391,"m":0.12,"b":50545784},{"n":"Hyundai Verna 1.4 CRDi","l":"Pune","y":2014,"k":86000,"p":8613478,"m":0.18,"b":7063052},{"n":"Honda Amaze EX i-Vtech","l":"Hyderabad","y":2013,"k":34000,"p":6889895,"m":0.12,"b":6063108},{"n":"Audi A4 2.0 TDI Premium Sport Limited Edition","l":"Bangalore","y":2014,"k":36000,"p":37626988,"m":0.12,"b":33111750},{"n":"Hyundai i10 Magna","l":"Mumbai","y":2013,"k":49000,"p":4834516,"m":0.12,"b":4254374},{"n":"Tata Tigor 1.2 Revotron XT","l":"Mumbai","y":2017,"k":7000,"p":8405587,"m":0.12,"b":7396916},{"n":"Hyundai Xcent 1.1 CRDi S","l":"Kolkata","y":2014,"k":60188,"p":5786684,"m":0.12,"b":5092282},{"n":"Ford Figo Diesel ZXI","l":"Ahmedabad","y":2012,"k":79000,"p":4467024,"m":0.18,"b":3662960},{"n":"Toyota Innova 2.5 GX (Diesel) 7 Seater","l":"Chennai","y":2012,"k":115439,"p":13878565,"m":0.18,"b":11380423},{"n":"Hyundai i20 2015-2017 1.4 CRDi Sportz","l":"Pune","y":2011,"k":104500,"p":5074618,"m":0.18,"b":4161187},{"n":"Mercedes-Benz E-Class E250 CDI Launch Edition","l":"Delhi","y":2013,"k":35000,"p":32698248,"m":0.12,"b":28774458},{"n":"Hyundai Creta 1.6 SX Plus Diesel","l":"Coimbatore","y":2016,"k":26186,"p":19351533,"m":0.12,"b":17029349},{"n":"Chevrolet Spark 1.0 LT","l":"Pune","y":2012,"k":58061,"p":3125730,"m":0.18,"b":2563098},{"n":"Hyundai i20 1.4 CRDi Sportz","l":"Ahmedabad","y":2011,"k":62000,"p":5366671,"m":0.18,"b":4400671},{"n":"Maruti Swift Dzire VDI","l":"Mumbai","y":2013,"k":118000,"p":6402047,"m":0.18,"b":5249678},{"n":"Hyundai i10 Magna 1.2","l":"Chennai","y":2009,"k":65000,"p":3846742,"m":0.18,"b":3154329},{"n":"Hyundai Santro Xing GLS","l":"Hyderabad","y":2008,"k":44379,"p":3339127,"m":0.18,"b":2738084},{"n":"Ford Ecosport 1.5 DV5 MT Ambiente","l":"Kochi","y":2017,"k":61041,"p":12288425,"m":0.12,"b":10813814},{"n":"Ford Fiesta Classic 1.4 Duratorq CLXI","l":"Bangalore","y":2011,"k":73000,"p":4404681,"m":0.18,"b":3611839},{"n":"Hyundai Creta 1.6 CRDi AT SX Plus","l":"Pune","y":2016,"k":57297,"p":17530704,"m":0.12,"b":15427020},{"n":"Hyundai Creta 1.6 VTVT Base","l":"Hyderabad","y":2015,"k":28700,"p":13194021,"m":0.12,"b":11610738},{"n":"Honda City 1.5 V MT","l":"Hyderabad","y":2013,"k":85264,"p":10104519,"m":0.18,"b":8285706},{"n":"Honda City 1.5 V MT","l":"Pune","y":2010,"k":83000,"p":4790975,"m":0.18,"b":3928600},{"n":"Ford Fiesta Classic 1.6 Duratec LXI","l":"Hyderabad","y":2013,"k":23000,"p":8101845,"m":0.12,"b":7129623},{"n":"Hyundai i20 Sportz 1.2","l":"Mumbai","y":2017,"k":14927,"p":9622307,"m":0.12,"b":8467630},{"n":"Toyota Corolla Executive (HE)","l":"Hyderabad","y":2007,"k":158000,"p":3522916,"m":0.18,"b":2888791},{"n":"Nissan Micra Diesel XV","l":"Jaipur","y":2011,"k":111000,"p":3354697,"m":0.21,"b":2650211},{"n":"Maruti Alto LXi BSIII","l":"Hyderabad","y":2011,"k":63528,"p":3513551,"m":0.18,"b":2881112},{"n":"Maruti Ciaz VDi Plus","l":"Jaipur","y":2015,"k":92000,"p":10239231,"m":0.18,"b":8396169},{"n":"Maruti Ciaz 1.3 Alpha","l":"Delhi","y":2017,"k":41200,"p":13234261,"m":0.12,"b":11646150},{"n":"Mahindra XUV500 W8 2WD","l":"Coimbatore","y":2016,"k":39052,"p":19851742,"m":0.12,"b":17469533},{"n":"Renault Duster 85PS Diesel RxL","l":"Ahmedabad","y":2014,"k":55100,"p":8613173,"m":0.12,"b":7579592},{"n":"Hyundai i20 1.2 Sportz","l":"Ahmedabad","y":2011,"k":76958,"p":5395533,"m":0.18,"b":4424337},{"n":"Renault Pulse RxL","l":"Kochi","y":2015,"k":70419,"p":6320242,"m":0.12,"b":5561813},{"n":"Maruti Wagon R AMT VXI","l":"Mumbai","y":2017,"k":21000,"p":6606739,"m":0.12,"b":5813930},{"n":"BMW 6 Series 650i Coupe","l":"Delhi","y":2009,"k":64000,"p":31910809,"m":0.18,"b":26166863},{"n":"Honda City V MT","l":"Delhi","y":2011,"k":63698,"p":5543526,"m":0.18,"b":4545691},{"n":"Tata Indigo eCS LX BSIV","l":"Coimbatore","y":2016,"k":62715,"p":5743113,"m":0.12,"b":5053939},{"n":"Honda Brio S MT","l":"Coimbatore","y":2013,"k":37922,"p":6561264,"m":0.12,"b":5773912},{"n":"Honda Jazz 1.5 S i DTEC","l":"Ahmedabad","y":2016,"k":52000,"p":10419950,"m":0.12,"b":9169556},{"n":"Mercedes-Benz A Class A180 CDI","l":"Chennai","y":2013,"k":47000,"p":22615814,"m":0.12,"b":19901916},{"n":"Toyota Corolla Altis GL","l":"Mumbai","y":2009,"k":64000,"p":4063037,"m":0.18,"b":3331690},{"n":"Honda Civic 2006-2010 1.8 (E) MT","l":"Hyderabad","y":2007,"k":109000,"p":4065574,"m":0.18,"b":3333770},{"n":"Hyundai Creta 1.6 CRDi SX Option","l":"Mumbai","y":2015,"k":19000,"p":15188433,"m":0.12,"b":13365821},{"n":"Audi Q5 2008-2012 2.0 TFSI Quattro","l":"Ahmedabad","y":2009,"k":99000,"p":15139117,"m":0.18,"b":12414076},{"n":"OpelCorsa 1.4Gsi","l":"Hyderabad","y":2005,"k":50000,"p":1720202,"m":0.18,"b":1410566},{"n":"Toyota Fortuner 4x2 AT","l":"Pune","y":2013,"k":105000,"p":26658912,"m":0.18,"b":21860308},{"n":"Hyundai Creta 1.6 VTVT S","l":"Jaipur","y":2016,"k":24000,"p":13158676,"m":0.12,"b":11579635},{"n":"Hyundai i20 Magna","l":"Ahmedabad","y":2009,"k":90000,"p":4504014,"m":0.18,"b":3693292},{"n":"Audi A6 2011-2015 2.0 TDI Premium Plus","l":"Delhi","y":2013,"k":20000,"p":33981871,"m":0.12,"b":29904047},{"n":"Hyundai Grand i10 CRDi Sportz","l":"Jaipur","y":2014,"k":62269,"p":6337001,"m":0.12,"b":5576561},{"n":"Audi Q3 30 TDI S Edition","l":"Chennai","y":2015,"k":69000,"p":15625958,"m":0.12,"b":13750843},{"n":"BMW 5 Series 2013-2017 530d M Sport","l":"Kochi","y":2015,"k":58898,"p":59529049,"m":0.12,"b":52385563},{"n":"Maruti Swift Dzire AMT ZDI","l":"Coimbatore","y":2018,"k":29110,"p":14304187,"m":0.12,"b":12587684},{"n":"Honda City i DTEC SV","l":"Kolkata","y":2017,"k":13000,"p":11156605,"m":0.12,"b":9817812},{"n":"Honda Jazz 1.2 V CVT i VTEC","l":"Coimbatore","y":2018,"k":36611,"p":12663378,"m":0.12,"b":11143772},{"n":"Maruti Swift VDi BSIII W/ ABS","l":"Jaipur","y":2008,"k":150000,"p":3040064,"m":0.18,"b":2492853},{"n":"Maruti Ciaz RS ZDi Plus SHVS","l":"Kochi","y":2017,"k":45158,"p":11751949,"m":0.12,"b":10341715},{"n":"Volkswagen Vento 1.2 TSI Comfortline AT","l":"Coimbatore","y":2016,"k":36968,"p":12202473,"m":0.12,"b":10738176},{"n":"Maruti Swift VXI BSIV","l":"Coimbatore","y":2015,"k":53556,"p":8582272,"m":0.12,"b":7552400},{"n":"Skoda Laura Ambition 2.0 TDI CR AT","l":"Bangalore","y":2013,"k":78500,"p":15687098,"m":0.12,"b":13804647},{"n":"Hyundai Xcent 1.1 CRDi S Celebration Edition","l":"Jaipur","y":2017,"k":133000,"p":6239314,"m":0.18,"b":5116237},{"n":"Hyundai Creta 1.6 CRDi SX","l":"Coimbatore","y":2017,"k":33186,"p":21250878,"m":0.12,"b":18700772},{"n":"Mercedes-Benz New C-Class C 200 CGI Elegance","l":"Delhi","y":2012,"k":65000,"p":21516431,"m":0.18,"b":17643474},{"n":"Maruti Swift VDI","l":"Coimbatore","y":2015,"k":61903,"p":8842793,"m":0.12,"b":7781657},{"n":"Toyota Etios G","l":"Kolkata","y":2011,"k":25000,"p":3912404,"m":0.18,"b":3208171},{"n":"Hyundai Santro Xing XG AT eRLX Euro III","l":"Coimbatore","y":2007,"k":64168,"p":3837858,"m":0.18,"b":3147043},{"n":"Maruti Swift Dzire VXI Optional","l":"Hyderabad","y":2017,"k":8044,"p":11199193,"m":0.12,"b":9855289},{"n":"Audi Q5 3.0 TDI Quattro Technology","l":"Bangalore","y":2017,"k":18000,"p":72157553,"m":0.12,"b":63498647},{"n":"Honda City V MT","l":"Mumbai","y":2013,"k":80000,"p":7242204,"m":0.12,"b":6373140},{"n":"Mahindra KUV 100 mFALCON D75 K6 5str AW","l":"Chennai","y":2016,"k":45000,"p":8090247,"m":0.12,"b":7119417},{"n":"Mahindra Xylo D4 BSIV","l":"Mumbai","y":2013,"k":78835,"p":7494218,"m":0.12,"b":6594912},{"n":"Mahindra Scorpio VLX 2WD BSIII","l":"Hyderabad","y":2011,"k":72573,"p":11207770,"m":0.18,"b":9190372},{"n":"Maruti Wagon R VXI BSIII","l":"Mumbai","y":2011,"k":50215,"p":3249306,"m":0.18,"b":2664431},{"n":"Maruti 800 AC","l":"Kolkata","y":2009,"k":9999,"p":1375156,"m":0.18,"b":1127628},{"n":"Honda Civic 2006-2010 1.8 MT Sport","l":"Pune","y":2008,"k":110000,"p":3498609,"m":0.18,"b":2868859},{"n":"Chevrolet Beat Diesel LS","l":"Jaipur","y":2013,"k":81000,"p":3302650,"m":0.18,"b":2708173},{"n":"Hyundai EON Era Plus","l":"Mumbai","y":2015,"k":8300,"p":4471865,"m":0.12,"b":3935241},{"n":"Mahindra Ssangyong Rexton RX7","l":"Mumbai","y":2016,"k":40000,"p":24506754,"m":0.12,"b":21565943},{"n":"Hyundai Creta 1.6 CRDi SX Option","l":"Pune","y":2016,"k":83500,"p":16491797,"m":0.18,"b":13523274},{"n":"Chevrolet Enjoy Petrol LTZ 7 Seater","l":"Mumbai","y":2013,"k":39000,"p":5429415,"m":0.12,"b":4777885},{"n":"Skoda Superb Elegance 2.0 TDI CR AT","l":"Pune","y":2013,"k":90000,"p":14305235,"m":0.18,"b":11730293},{"n":"Hyundai i20 2015-2017 Magna Optional 1.4 CRDi","l":"Pune","y":2012,"k":134487,"p":5856889,"m":0.18,"b":4802649},{"n":"Audi Q3 2012-2015 2.0 TDI Quattro Premium Plus","l":"Bangalore","y":2014,"k":65000,"p":33637038,"m":0.12,"b":29600594},{"n":"Mahindra Scorpio S6 Plus 7 Seater","l":"Ahmedabad","y":2015,"k":48000,"p":13942763,"m":0.12,"b":12269632},{"n":"BMW 3 Series 320d","l":"Bangalore","y":2011,"k":60000,"p":21207896,"m":0.18,"b":17390475},{"n":"Mercedes-Benz CLA 45 AMG","l":"Kochi","y":2015,"k":23742,"p":36886512,"m":0.12,"b":32460130},{"n":"Honda City 1.5 S MT","l":"Hyderabad","y":2010,"k":60268,"p":6506004,"m":0.18,"b":5334923},{"n":"Toyota Camry 2.5 G","l":"Delhi","y":2014,"k":61000,"p":19764966,"m":0.12,"b":17393170},{"n":"Maruti Swift Vdi BSIII","l":"Pune","y":2007,"k":102000,"p":2831302,"m":0.18,"b":2321668},{"n":"Hyundai Elantra SX AT","l":"Bangalore","y":2016,"k":25000,"p":30805615,"m":0.12,"b":27108941},{"n":"Renault Duster 85PS Diesel RxL Optional","l":"Delhi","y":2013,"k":64000,"p":6872104,"m":0.12,"b":6047451},{"n":"Audi Q5 2008-2012 3.0 TDI Quattro","l":"Hyderabad","y":2010,"k":78265,"p":32175731,"m":0.18,"b":26384100},{"n":"Maruti Esteem Vxi - BSIII","l":"Pune","y":2006,"k":76560,"p":1781808,"m":0.21,"b":1407628},{"n":"Honda City 1.5 V AT","l":"Mumbai","y":2010,"k":52000,"p":5062957,"m":0.18,"b":4151625},{"n":"Maruti Baleno Zeta 1.2","l":"Kochi","y":2018,"k":29562,"p":11073109,"m":0.12,"b":9744336},{"n":"Maruti Swift Dzire VDI","l":"Kolkata","y":2014,"k":32000,"p":6743254,"m":0.12,"b":5934064},{"n":"Volkswagen Polo 1.2 MPI Highline","l":"Coimbatore","y":2016,"k":22003,"p":9578862,"m":0.12,"b":8429399},{"n":"Honda City ZX EXi","l":"Pune","y":2008,"k":100000,"p":3638223,"m":0.18,"b":2983342},{"n":"Hyundai EON Era Plus","l":"Jaipur","y":2013,"k":60000,"p":3313223,"m":0.12,"b":2915636},{"n":"Chevrolet Spark 1.0 PS","l":"Jaipur","y":2010,"k":6512,"p":2957222,"m":0.18,"b":2424922},{"n":"Maruti Alto LXi","l":"Kolkata","y":2008,"k":39008,"p":1704560,"m":0.18,"b":1397739},{"n":"Toyota Corolla Executive (HE)","l":"Chennai","y":2003,"k":136441,"p":2616140,"m":0.18,"b":2145235},{"n":"Hyundai i20 1.2 Sportz Option","l":"Kolkata","y":2012,"k":36200,"p":4410230,"m":0.18,"b":3616388},{"n":"Hyundai Verna 1.4 CRDi","l":"Kolkata","y":2015,"k":32506,"p":8272990,"m":0.12,"b":7280231},{"n":"Chevrolet Enjoy 1.4 LTZ 8","l":"Pune","y":2016,"k":67000,"p":7540929,"m":0.12,"b":6636017},{"n":"Fiat Grande Punto 1.4 Emotion","l":"Pune","y":2011,"k":59800,"p":3562104,"m":0.18,"b":2920925},{"n":"Mahindra XUV500 W8 4WD","l":"Coimbatore","y":2015,"k":63008,"p":16653873,"m":0.12,"b":14655408},{"n":"Toyota Etios Liva G","l":"Kolkata","y":2012,"k":37212,"p":4374227,"m":0.18,"b":3586866},{"n":"Hyundai Creta 1.6 CRDi SX","l":"Jaipur","y":2015,"k":65000,"p":15262826,"m":0.12,"b":13431287},{"n":"Hyundai Santro Xing GLS","l":"Coimbatore","y":2009,"k":61259,"p":3923444,"m":0.18,"b":3217224},{"n":"Hyundai i20 1.4 Asta (AT)","l":"Chennai","y":2010,"k":50000,"p":4024821,"m":0.18,"b":3300353},{"n":"Hyundai Elantra CRDi","l":"Mumbai","y":2006,"k":183513,"p":3329920,"m":0.18,"b":2730534},{"n":"Mahindra XUV500 W10 2WD","l":"Delhi","y":2015,"k":66000,"p":16074650,"m":0.12,"b":14145692},{"n":"Audi A6 2.0 TDI Design Edition","l":"Kochi","y":2012,"k":78979,"p":28752653,"m":0.18,"b":23577175},{"n":"Mercedes-Benz A Class Edition 1","l":"Kochi","y":2016,"k":27508,"p":27505252,"m":0.12,"b":24204621},{"n":"Hyundai Verna 1.6 SX VTVT (O) AT","l":"Mumbai","y":2014,"k":28000,"p":12256539,"m":0.12,"b":10785755},{"n":"Mercedes-Benz New C-Class C 220d Avantgarde Edition C","l":"Mumbai","y":2014,"k":45000,"p":32436963,"m":0.12,"b":28544527},{"n":"BMW 7 Series 740i Sedan","l":"Kochi","y":2013,"k":86107,"p":48079222,"m":0.18,"b":39424962},{"n":"Land Rover Range Rover 2.2L Pure","l":"Hyderabad","y":2015,"k":49000,"p":65903124,"m":0.12,"b":57994749},{"n":"Hyundai Creta 1.6 SX Plus Petrol Automatic","l":"Coimbatore","y":2018,"k":32746,"p":23098803,"m":0.12,"b":20326946},{"n":"Volkswagen Vento 1.2 TSI Highline AT","l":"Mumbai","y":2013,"k":42758,"p":7159036,"m":0.12,"b":6299952},{"n":"Mini Cooper Countryman D","l":"Hyderabad","y":2013,"k":50000,"p":26452631,"m":0.12,"b":23278316},{"n":"Volvo S60 D4 KINETIC","l":"Coimbatore","y":2016,"k":90904,"p":30861279,"m":0.18,"b":25306249},{"n":"Renault Pulse RxL","l":"Kolkata","y":2012,"k":52612,"p":4264315,"m":0.18,"b":3496738},{"n":"Honda Amaze SX i-VTEC","l":"Kolkata","y":2015,"k":40000,"p":5748249,"m":0.12,"b":5058459},{"n":"Toyota Camry 2.5 G","l":"Delhi","y":2012,"k":80724,"p":13477463,"m":0.18,"b":11051520},{"n":"Maruti Alto LXi","l":"Hyderabad","y":2009,"k":62659,"p":3021344,"m":0.18,"b":2477502},{"n":"Maruti Ertiga ZXI","l":"Pune","y":2015,"k":15000,"p":9466992,"m":0.12,"b":8330953},{"n":"Audi A4 2.0 TDI","l":"Bangalore","y":2014,"k":65475,"p":30291926,"m":0.12,"b":26656895},{"n":"Maruti Ertiga VDI","l":"Chennai","y":2012,"k":71000,"p":8666655,"m":0.18,"b":7106657},{"n":"Mercedes-Benz New C-Class C 220 CDI Style","l":"Bangalore","y":2016,"k":16000,"p":56940284,"m":0.12,"b":50107450},{"n":"Maruti Swift Dzire 1.2 Vxi BSIV","l":"Delhi","y":2011,"k":72329,"p":4350148,"m":0.18,"b":3567121},{"n":"Mercedes-Benz GLA Class 200 CDI SPORT","l":"Coimbatore","y":2016,"k":49398,"p":36374137,"m":0.12,"b":32009241},{"n":"Honda City i VTEC VX Option","l":"Jaipur","y":2016,"k":44147,"p":12324317,"m":0.12,"b":10845399},{"n":"Maruti Alto LXi BSII","l":"Ahmedabad","y":2007,"k":45000,"p":2441992,"m":0.18,"b":2002434},{"n":"Toyota Fortuner 3.0 Diesel","l":"Delhi","y":2011,"k":75000,"p":17423051,"m":0.18,"b":14286902},{"n":"Hyundai Elite i20 Petrol Asta","l":"Kochi","y":2016,"k":26642,"p":8089276,"m":0.12,"b":7118563},{"n":"Honda Amaze VX i-DTEC","l":"Hyderabad","y":2013,"k":81304,"p":7717424,"m":0.18,"b":6328288},{"n":"Volkswagen Jetta 2007-2011 2.0 TDI Comfortline","l":"Kolkata","y":2013,"k":46000,"p":7247205,"m":0.12,"b":6377540},{"n":"Mercedes-Benz S Class 2005 2013 320 L","l":"Hyderabad","y":2007,"k":99000,"p":17638957,"m":0.18,"b":14463945},{"n":"Hyundai EON Era","l":"Pune","y":2012,"k":36317,"p":3341070,"m":0.18,"b":2739677},{"n":"Maruti Zen Estilo LXI BSIII","l":"Pune","y":2008,"k":70000,"p":2455220,"m":0.18,"b":2013281},{"n":"Hyundai Verna CRDi SX","l":"Hyderabad","y":2009,"k":137711,"p":5132802,"m":0.18,"b":4208897},{"n":"Hyundai i20 Asta Option 1.2","l":"Mumbai","y":2015,"k":31293,"p":8062247,"m":0.12,"b":7094778},{"n":"Maruti Baleno Vxi - BSIII","l":"Pune","y":2004,"k":43000,"p":1567030,"m":0.18,"b":1284964},{"n":"Honda Jazz 1.5 S i DTEC","l":"Ahmedabad","y":2016,"k":45000,"p":10837972,"m":0.12,"b":9537415},{"n":"Volkswagen Vento Diesel Comfortline","l":"Kolkata","y":2012,"k":53000,"p":5534105,"m":0.18,"b":4537966},{"n":"Hyundai i10 Magna 1.1L","l":"Pune","y":2011,"k":30000,"p":3531099,"m":0.18,"b":2895501},{"n":"Renault Duster 110PS Diesel RxZ","l":"Delhi","y":2013,"k":62000,"p":7924907,"m":0.12,"b":6973918},{"n":"Maruti Swift Dzire VXi","l":"Chennai","y":2012,"k":35161,"p":5984745,"m":0.18,"b":4907491},{"n":"Maruti Alto LXi","l":"Jaipur","y":2006,"k":75000,"p":1742772,"m":0.18,"b":1429073},{"n":"Tata Nano XTA","l":"Coimbatore","y":2016,"k":53590,"p":4442056,"m":0.12,"b":3909009},{"n":"Hyundai i10 Era 1.1","l":"Chennai","y":2008,"k":71467,"p":3011855,"m":0.18,"b":2469721},{"n":"Maruti Alto XCITE","l":"Kochi","y":2011,"k":66287,"p":3175459,"m":0.18,"b":2603877},{"n":"Ford Figo Diesel EXI","l":"Jaipur","y":2012,"k":85000,"p":3703447,"m":0.18,"b":3036826},{"n":"Land Rover Discovery 4 TDV6 Auto Diesel","l":"Hyderabad","y":2012,"k":147202,"p":51290016,"m":0.18,"b":42057813},{"n":"Honda City i DTec SV","l":"Coimbatore","y":2016,"k":72566,"p":11575396,"m":0.12,"b":10186348},{"n":"Maruti Ritz LDi","l":"Pune","y":2015,"k":190000,"p":5487993,"m":0.18,"b":4500154},{"n":"Hyundai Grand i10 1.2 Kappa Sportz Option","l":"Delhi","y":2017,"k":25348,"p":7859036,"m":0.12,"b":6915952},{"n":"Hyundai Grand i10 AT Asta","l":"Delhi","y":2014,"k":54000,"p":6246645,"m":0.12,"b":5497047},{"n":"Hyundai i20 Sportz Option 1.2","l":"Bangalore","y":2015,"k":33000,"p":8836098,"m":0.12,"b":7775766},{"n":"BMW 5 Series 2003-2012 520d","l":"Delhi","y":2011,"k":58067,"p":19194906,"m":0.18,"b":15739823},{"n":"Mercedes-Benz E-Class E250 CDI Avantgrade","l":"Coimbatore","y":2015,"k":43020,"p":43259269,"m":0.12,"b":38068156},{"n":"Toyota Innova 2.5 G (Diesel) 7 Seater BS IV","l":"Hyderabad","y":2014,"k":27641,"p":19690667,"m":0.12,"b":17327787},{"n":"Maruti Swift Dzire ZDI","l":"Hyderabad","y":2016,"k":46372,"p":9601094,"m":0.12,"b":8448963},{"n":"Maruti Vitara Brezza VDi Option","l":"Jaipur","y":2017,"k":19000,"p":14270452,"m":0.12,"b":12557998},{"n":"Hyundai Verna Transform VTVT with Audio","l":"Kolkata","y":2010,"k":47000,"p":3403203,"m":0.18,"b":2790627},{"n":"Honda City i VTEC VX","l":"Delhi","y":2015,"k":60595,"p":10124522,"m":0.12,"b":8909580},{"n":"Tata Indica Vista Quadrajet LS","l":"Hyderabad","y":2013,"k":170000,"p":4821533,"m":0.18,"b":3953657},{"n":"Hyundai i20 Active 1.4 SX","l":"Delhi","y":2017,"k":14301,"p":13974869,"m":0.12,"b":12297885},{"n":"Audi A6 2011-2015 2.0 TDI","l":"Kochi","y":2015,"k":42741,"p":39589093,"m":0.12,"b":34838402},{"n":"BMW X5 xDrive 30d Design Pure Experience 5 Seater","l":"Delhi","y":2015,"k":31000,"p":84170081,"m":0.12,"b":74069671},{"n":"Hyundai Creta 1.6 SX Plus Dual Tone Petrol","l":"Delhi","y":2017,"k":11000,"p":18103529,"m":0.12,"b":15931106},{"n":"Ford Fiesta 1.4 Duratec EXI","l":"Coimbatore","y":2009,"k":44702,"p":5131231,"m":0.18,"b":4207610},{"n":"Maruti Celerio VXI AT","l":"Chennai","y":2015,"k":31717,"p":6460296,"m":0.12,"b":5685060},{"n":"Chevrolet Captiva LT","l":"Kochi","y":2011,"k":99120,"p":8848579,"m":0.18,"b":7255835},{"n":"Skoda Superb Petrol Ambition","l":"Delhi","y":2010,"k":40000,"p":8968050,"m":0.18,"b":7353801},{"n":"Hyundai Santro Xing GL","l":"Ahmedabad","y":2014,"k":41000,"p":4777016,"m":0.12,"b":4203774},{"n":"Mahindra Renault Logan 1.5 DLE Diesel","l":"Chennai","y":2007,"k":160000,"p":2894270,"m":0.18,"b":2373301},{"n":"Volkswagen Vento Petrol Highline AT","l":"Mumbai","y":2011,"k":67500,"p":5186331,"m":0.18,"b":4252791},{"n":"Hyundai i20 1.2 Spotz","l":"Pune","y":2014,"k":30315,"p":7143505,"m":0.12,"b":6286284},{"n":"Audi A4 2.0 TDI","l":"Bangalore","y":2014,"k":21143,"p":35886298,"m":0.12,"b":31579943},{"n":"Hyundai Verna 1.6 SX VTVT (O)","l":"Kochi","y":2013,"k":42203,"p":8083905,"m":0.12,"b":7113837},{"n":"Honda Amaze S i-Dtech","l":"Kolkata","y":2013,"k":38568,"p":5295798,"m":0.12,"b":4660303},{"n":"Audi A4 2.0 TDI","l":"Hyderabad","y":2011,"k":64000,"p":23112336,"m":0.18,"b":18952115},{"n":"Honda Amaze VX AT i-Vtech","l":"Hyderabad","y":2014,"k":57000,"p":7347075,"m":0.12,"b":6465426},{"n":"Honda Jazz 1.5 V i DTEC","l":"Coimbatore","y":2017,"k":44556,"p":13358895,"m":0.12,"b":11755828},{"n":"BMW 5 Series 525d Sedan","l":"Delhi","y":2012,"k":80000,"p":30215651,"m":0.18,"b":24776833},{"n":"Hyundai Grand i10 Asta Option","l":"Kolkata","y":2015,"k":39000,"p":5906344,"m":0.12,"b":5197583},{"n":"Renault Duster 85PS Diesel RxL","l":"Chennai","y":2015,"k":70000,"p":10163055,"m":0.12,"b":8943488},{"n":"Chevrolet Aveo 1.4 LS","l":"Pune","y":2009,"k":45463,"p":2568827,"m":0.18,"b":2106438},{"n":"Honda Amaze S i-Vtech","l":"Kochi","y":2015,"k":44776,"p":7495132,"m":0.12,"b":6595717},{"n":"Hyundai Grand i10 AT Asta","l":"Coimbatore","y":2016,"k":18242,"p":9503292,"m":0.12,"b":8362897},{"n":"Hyundai EON D Lite Plus","l":"Coimbatore","y":2015,"k":21190,"p":5606310,"m":0.12,"b":4933552},{"n":"Volkswagen Vento Diesel Trendline","l":"Hyderabad","y":2011,"k":89411,"p":6769566,"m":0.18,"b":5551044},{"n":"Volkswagen Polo GT TSI","l":"Mumbai","y":2015,"k":59000,"p":8280386,"m":0.12,"b":7286740},{"n":"Nissan Micra Diesel XV","l":"Kolkata","y":2012,"k":28000,"p":4593272,"m":0.18,"b":3766483},{"n":"Volkswagen Polo GT TSI","l":"Pune","y":2013,"k":52262,"p":7231219,"m":0.15,"b":6146536},{"n":"Mercedes-Benz E-Class 2009-2013 E 220 CDI Avantgarde","l":"Kochi","y":2014,"k":72443,"p":27113666,"m":0.12,"b":23860026}];
+
+/* ================= helpers ================= */
+const won = n => Math.round(n).toLocaleString("ko-KR") + "원";
+const manwon = n => Math.round(n/10000).toLocaleString("ko-KR") + "만원";
+const pct = n => (n*100).toFixed(1) + "%";
+const OWNER_RANK = {"First":1, "Second":2, "Third":3, "Fourth & Above":4};
+const OWNER_KO = {"First":"1인 소유","Second":"2인 소유","Third":"3인 소유","Fourth & Above":"4인 이상"};
+
+function interp(points, x){
+  if (x <= points[0][0]) return points[0][1];
+  const last = points[points.length-1];
+  if (x >= last[0]) return last[1];
+  for (let i=0;i<points.length-1;i++){
+    const [x0,y0] = points[i], [x1,y1] = points[i+1];
+    if (x>=x0 && x<=x1){ const t=(x-x0)/(x1-x0); return y0 + t*(y1-y0); }
+  }
+  return last[1];
+}
+
+function riskMargin(age, km, ownerRank){
+  let m = 0.12;
+  if (age > 7 || km > 80000) m += 0.06;
+  if (ownerRank >= 3) m += 0.03;
+  return Math.min(m, 0.25);
+}
+
+const locFactorTable = (() => {
+  const vals = Object.values(ANALYSIS.eda.locMedian);
+  const avg = vals.reduce((a,b)=>a+b,0)/vals.length;
+  const out = {};
+  for (const k in ANALYSIS.eda.locMedian) out[k] = ANALYSIS.eda.locMedian[k]/avg;
+  return out;
+})();
+const ownerFactorTable = (() => {
+  const first = ANALYSIS.eda.ownerMedian["1인 소유"];
+  return {
+    "First": 1,
+    "Second": ANALYSIS.eda.ownerMedian["2인 소유"]/first,
+    "Third": ANALYSIS.eda.ownerMedian["3인 소유"]/first,
+    "Fourth & Above": ANALYSIS.eda.ownerMedian["4인 이상"]/first
+  };
+})();
+const FUEL_FACTOR = {Petrol:1.0, Diesel:1.05, CNG:0.92, LPG:0.90, Electric:1.15};
+const TRANS_FACTOR = {Manual:1.0, Automatic:1.06};
+
+function surrogatePredict(inp){
+  const ageV = interp(ANALYSIS.eda.ageCurve, inp.age);
+  const kmV = interp(ANALYSIS.eda.kmCurve, inp.km);
+  const base = Math.sqrt(ageV * kmV);
+  const locF = Math.pow(locFactorTable[inp.loc] ?? 1, 0.85);
+  const ownF = Math.pow(ownerFactorTable[inp.owner] ?? 1, 0.6);
+  const powF = Math.pow(inp.power/94, 1.2);
+  const engF = Math.pow(inp.engine/1493, 0.5);
+  const mileF = Math.pow(inp.mileage/18.2, -0.05);
+  const fuelF = FUEL_FACTOR[inp.fuel] ?? 1;
+  const transF = TRANS_FACTOR[inp.trans] ?? 1;
+  const predicted = base * locF * ownF * powF * engF * mileF * fuelF * transF;
+  const ownerRank = OWNER_RANK[inp.owner] ?? 1;
+  const margin = riskMargin(inp.age, inp.km, ownerRank);
+  const bid = predicted * (1 - margin);
+  return {predicted, margin, bid, ownerRank};
+}
+
+/* ================= state ================= */
+const state = {
+  loc: "Bangalore", age: 4, km: 42000, power: 94, engine: 1493, mileage: 18.2,
+  fuel: "Petrol", trans: "Manual", owner: "First", seats: 5,
+  realRecord: null, curveMode: "age"
+};
+
+/* ================= chart builders (HTML/CSS bars + inline SVG curve) ================= */
+function seriesVar(i){ return "var(--series-"+i+")"; }
+
+function renderBarChart(container, items, opts){
+  opts = opts || {};
+  const max = opts.max || Math.max(...items.map(it=>it.value), 1e-9);
+  const fmt = opts.fmt || (v => v.toFixed(3));
+  container.innerHTML = items.map(it => {
+    const w = Math.max(2, (it.value/max)*100);
+    const color = it.muted ? "var(--text-muted)" : (it.color || "var(--series-1)");
+    const opacity = it.muted ? 0.35 : 1;
+    const extra = it.sub ? ` <span style="color:var(--text-muted);font-weight:500;">${it.sub}</span>` : "";
+    return `<div class="barrow ${opts.tight?'tight':''}">
+      <div class="lab" title="${it.label}">${it.label}</div>
+      <div class="track"><div class="fill" style="width:${w}%;background:${color};opacity:${opacity};"></div></div>
+      <div class="val">${fmt(it.value)}${extra}</div>
+    </div>`;
+  }).join("");
+}
+
+function renderCurveChart(container, mode, currentX){
+  const cfg = mode === "age"
+    ? {points: ANALYSIS.eda.ageCurve, labels: ANALYSIS.eda.ageBinLabel, xs: ANALYSIS.eda.ageBinX, unit:"년", title:"연식"}
+    : {points: ANALYSIS.eda.kmCurve, labels: ANALYSIS.eda.kmBinLabel, xs: ANALYSIS.eda.kmBinX, unit:"km", title:"주행거리"};
+  const W = 560, H = 220, pad = {l:56,r:16,t:16,b:28};
+  const innerW = W-pad.l-pad.r, innerH = H-pad.t-pad.b;
+  const x0 = cfg.points[0][0], x1 = cfg.points[cfg.points.length-1][0];
+  const ys = cfg.points.map(p=>p[1]);
+  const y0 = 0, y1 = Math.max(...ys)*1.08;
+  const sx = x => pad.l + ((x-x0)/(x1-x0))*innerW;
+  const sy = y => pad.t + innerH - ((y-y0)/(y1-y0))*innerH;
+
+  const samples = [];
+  const steps = 40;
+  for (let i=0;i<=steps;i++){
+    const x = x0 + (x1-x0)*(i/steps);
+    samples.push([x, interp(cfg.points, x)]);
+  }
+  const linePath = samples.map((p,i)=> (i===0?"M ":"L ")+sx(p[0]).toFixed(1)+" "+sy(p[1]).toFixed(1)).join(" ");
+  const areaPath = linePath + ` L ${sx(x1).toFixed(1)} ${sy(0).toFixed(1)} L ${sx(x0).toFixed(1)} ${sy(0).toFixed(1)} Z`;
+
+  const cx = Math.min(Math.max(currentX, x0), x1);
+  const cy = interp(cfg.points, cx);
+
+  const gridTicks = 4;
+  let gridLines = "", gridLabels = "";
+  for (let i=0;i<=gridTicks;i++){
+    const gy = y0 + (y1-y0)*(i/gridTicks);
+    const yy = sy(gy);
+    gridLines += `<line x1="${pad.l}" x2="${W-pad.r}" y1="${yy.toFixed(1)}" y2="${yy.toFixed(1)}"></line>`;
+    gridLabels += `<text x="${pad.l-8}" y="${(yy+3).toFixed(1)}" text-anchor="end">${manwon(gy)}</text>`;
+  }
+  let xLabels = "";
+  cfg.xs.forEach((x,i) => {
+    xLabels += `<text x="${sx(x).toFixed(1)}" y="${H-8}" text-anchor="middle">${cfg.labels[i]}</text>`;
+  });
+
+  container.innerHTML = `
+    <svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="${cfg.title}별 실거래 중앙값 곡선">
+      <g class="chart-grid">${gridLines}</g>
+      <g class="chart-axis">${gridLabels}${xLabels}</g>
+      <path class="chart-area" d="${areaPath}"></path>
+      <path class="chart-line" d="${linePath}"></path>
+      <circle class="chart-marker" cx="${sx(cx).toFixed(1)}" cy="${sy(cy).toFixed(1)}" r="6"></circle>
+      <text class="chart-marker-label" x="${Math.min(sx(cx)+10, W-pad.r-4)}" y="${(sy(cy)-10).toFixed(1)}">${manwon(cy)}</text>
+    </svg>`;
+}
+
+function renderMarginMeter(age, km, ownerRank){
+  const meter = document.getElementById("margin-meter");
+  const MAXM = 0.25;
+  const base = 0.12, riskAK = (age>7||km>80000) ? 0.06 : 0, riskOwn = (ownerRank>=3) ? 0.03 : 0;
+  let x = 0;
+  const seg = (w, color) => { const pctW = (w/MAXM)*100; const el = `<div class="seg-fill" style="left:${x}%;width:${Math.max(pctW-0.6,0)}%;background:${color};"></div>`; x += pctW; return el; };
+  meter.innerHTML = seg(base, "var(--brand)") + (riskAK>0 ? seg(riskAK, "var(--warning)") : "") + (riskOwn>0 ? seg(riskOwn, "var(--critical)") : "");
+
+  const legend = document.getElementById("margin-legend");
+  legend.innerHTML = `
+    <span class="legend-item"><span class="legend-dot" style="background:var(--brand);"></span>기본 마진 12%</span>
+    <span class="legend-item ${riskAK>0?'':'dim'}"><span class="legend-dot" style="background:var(--warning);"></span>연식&gt;7년 또는 주행&gt;80,000km +6%p</span>
+    <span class="legend-item ${riskOwn>0?'':'dim'}"><span class="legend-dot" style="background:var(--critical);"></span>소유이력 3인 이상 +3%p</span>
+  `;
+}
+
+/* ================= tab1: calculator ================= */
+function currentInput(){
+  return {loc: state.loc, age: state.age, km: state.km, power: state.power, engine: state.engine,
+    mileage: state.mileage, fuel: state.fuel, trans: state.trans, owner: state.owner, seats: state.seats};
+}
+
+function recalc(){
+  const usingReal = !!state.realRecord;
+  const badge = document.getElementById("calc-mode-badge");
+  let predicted, margin, bid, refLabel;
+
+  if (usingReal){
+    predicted = state.realRecord.p; margin = state.realRecord.m; bid = state.realRecord.b;
+    refLabel = state.realRecord.n.slice(0,28) + (state.realRecord.n.length>28?"…":"");
+    badge.textContent = "실측 모델 예측값";
+    badge.className = "badge badge-good";
+  } else {
+    const r = surrogatePredict(currentInput());
+    predicted = r.predicted; margin = r.margin; bid = r.bid; refLabel = "CUSTOM";
+    badge.textContent = "근사 추정 모드";
+    badge.className = "badge badge-neutral";
+  }
+
+  document.getElementById("out-bid").textContent = manwon(bid);
+  document.getElementById("out-bid-sub").textContent = won(bid);
+  document.getElementById("out-pred").textContent = manwon(predicted);
+  document.getElementById("out-margin").textContent = pct(margin);
+  document.getElementById("out-marginwon").textContent = manwon(predicted*margin);
+  document.getElementById("out-ref").textContent = refLabel;
+
+  const ownerRank = usingReal ? 1 : (OWNER_RANK[state.owner] || 1);
+  const ageForMeter = usingReal ? Math.max(0, 2020-state.realRecord.y) : state.age;
+  const kmForMeter = usingReal ? state.realRecord.k : state.km;
+  renderMarginMeter(ageForMeter, kmForMeter, ownerRank);
+
+  // feature-importance chart annotated with current inputs
+  const shapItems = ANALYSIS.shap.map((it,i) => {
+    let sub = "";
+    if (it.key === "power") sub = state.power+"bhp";
+    else if (it.key === "age") sub = state.age+"년";
+    else if (it.key === "engine") sub = state.engine.toLocaleString()+"cc";
+    else if (it.key === "km") sub = state.km.toLocaleString()+"km";
+    else if (it.key === "mileage") sub = state.mileage+"kmpl";
+    return {label: it.label, value: it.value, sub, color: i<3 ? "var(--series-1)" : "var(--text-muted)", muted: i>=3};
+  });
+  renderBarChart(document.getElementById("chart-shap"), shapItems, {fmt: v=>v.toFixed(3), tight:true});
+
+  // curve chart
+  const curveX = state.curveMode === "age" ? state.age : state.km;
+  renderCurveChart(document.getElementById("chart-curve"), state.curveMode, curveX);
+
+  // location chart
+  const locItems = Object.entries(ANALYSIS.eda.locMedian)
+    .sort((a,b)=>b[1]-a[1])
+    .map(([loc,val]) => ({label:loc, value: val, color: loc===state.loc ? "var(--brand)" : "var(--series-1)", muted: loc!==state.loc, fmt:true}));
+  renderBarChart(document.getElementById("chart-location"), locItems, {fmt: v=>manwon(v)});
+}
+
+function syncFormUI(){
+  document.getElementById("lb-loc").textContent = state.loc;
+  document.getElementById("in-loc").value = state.loc;
+  document.getElementById("lb-age").textContent = state.age;
+  document.getElementById("in-age").value = state.age;
+  document.getElementById("lb-km").textContent = state.km.toLocaleString();
+  document.getElementById("in-km").value = state.km;
+  document.getElementById("lb-power").textContent = state.power;
+  document.getElementById("in-power").value = state.power;
+  document.getElementById("lb-engine").textContent = state.engine.toLocaleString();
+  document.getElementById("in-engine").value = state.engine;
+  document.getElementById("lb-mileage").textContent = state.mileage;
+  document.getElementById("in-mileage").value = state.mileage;
+  setSeg("in-fuel", state.fuel);
+  setSeg("in-trans", state.trans);
+  setSeg("in-owner", state.owner);
+  document.getElementById("in-seats").value = String(state.seats);
+}
+
+function setSeg(id, value){
+  const wrap = document.getElementById(id);
+  wrap.dataset.value = value;
+  wrap.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.v === value)));
+}
+
+function touched(){
+  state.realRecord = null;
+  document.getElementById("real-compare").style.display = "none";
+  recalc();
+}
+
+function populateLocationSelect(){
+  const sel = document.getElementById("in-loc");
+  sel.innerHTML = Object.keys(ANALYSIS.eda.locMedian).sort().map(l => `<option value="${l}">${l}</option>`).join("");
+  sel.value = state.loc;
+}
+
+function wireForm(){
+  populateLocationSelect();
+  document.getElementById("in-loc").addEventListener("change", e => { state.loc = e.target.value; touched(); });
+  document.getElementById("in-age").addEventListener("input", e => { state.age = +e.target.value; document.getElementById("lb-age").textContent = state.age; touched(); });
+  document.getElementById("in-km").addEventListener("input", e => { state.km = +e.target.value; document.getElementById("lb-km").textContent = state.km.toLocaleString(); touched(); });
+  document.getElementById("in-power").addEventListener("input", e => { state.power = +e.target.value; document.getElementById("lb-power").textContent = state.power; touched(); });
+  document.getElementById("in-engine").addEventListener("input", e => { state.engine = +e.target.value; document.getElementById("lb-engine").textContent = state.engine.toLocaleString(); touched(); });
+  document.getElementById("in-mileage").addEventListener("input", e => { state.mileage = +(+e.target.value).toFixed(1); document.getElementById("lb-mileage").textContent = state.mileage; touched(); });
+  document.getElementById("in-seats").addEventListener("change", e => { state.seats = +e.target.value; touched(); });
+
+  ["in-fuel","in-trans","in-owner"].forEach(id => {
+    document.getElementById(id).addEventListener("click", e => {
+      const btn = e.target.closest("button"); if (!btn) return;
+      const v = btn.dataset.v;
+      setSeg(id, v);
+      if (id === "in-fuel") state.fuel = v;
+      if (id === "in-trans") state.trans = v;
+      if (id === "in-owner") state.owner = v;
+      touched();
+    });
+  });
+
+  document.getElementById("curve-toggle").addEventListener("click", e => {
+    const btn = e.target.closest("button"); if (!btn) return;
+    setSeg("curve-toggle", btn.dataset.v);
+    state.curveMode = btn.dataset.v;
+    recalc();
+  });
+
+  document.getElementById("btn-reset").addEventListener("click", () => {
+    Object.assign(state, {loc:"Bangalore", age:4, km:42000, power:94, engine:1493, mileage:18.2, fuel:"Petrol", trans:"Manual", owner:"First", seats:5, realRecord:null});
+    syncFormUI();
+    document.getElementById("real-compare").style.display = "none";
+    recalc();
+  });
+}
+
+/* ================= inventory search ================= */
+function loadFromRecord(rec){
+  state.realRecord = rec;
+  state.loc = rec.l;
+  state.km = Math.min(180000, Math.round(rec.k/1000)*1000);
+  state.age = Math.max(0, Math.min(18, 2020 - rec.y));
+  syncFormUI();
+
+  const surrogate = surrogatePredict(currentInput());
+  const diffPct = ((surrogate.predicted - rec.p) / rec.p) * 100;
+  const bigGap = Math.abs(diffPct) >= 25;
+  document.getElementById("real-compare").style.display = "block";
+  document.getElementById("compare-chips").innerHTML = `
+    <span class="chip" title="AI가 이 차량의 실제 제원을 모두 반영해 계산한, 그대로 믿을 수 있는 예상 재판매가입니다.">실측 예상가 <b>${manwon(rec.p)}</b></span>
+    <span class="chip" title="왼쪽 슬라이더로 즉석 계산한 참고용 수치입니다. 출력·배기량 등 CSV에 없는 정보는 표준값을 사용해 실제와 다를 수 있습니다.">근사식 추정가 <b>${manwon(surrogate.predicted)}</b></span>
+    <span class="chip" title="두 값의 차이 비율입니다. 모델의 오차가 아니라 '즉석 계산기'가 표준값을 썼기 때문에 생기는 차이입니다.">근사식 편차 <b>${bigGap ? "⚠ " : ""}${diffPct>=0?"+":""}${diffPct.toFixed(1)}%</b></span>
+    <span class="chip" title="연식·주행거리·소유이력 리스크를 반영해 자동 산정된 목표 마진율입니다.">실측 목표마진 <b>${pct(rec.m)}</b></span>
+    <span class="chip" title="예상 판매가에서 목표 마진을 뺀, 딜러가 현장에서 제시할 실제 권장 입찰가입니다.">실측 입찰가 <b>${manwon(rec.b)}</b></span>
+  `;
+  document.getElementById("compare-note").innerHTML = bigGap
+    ? `⚠ 이 차량은 출력·배기량이 표준값과 크게 달라 보입니다(예: 고배기량 SUV·프리미엄 브랜드). 왼쪽 "엔진 출력/배기량" 슬라이더를 실제 제원에 맞게 조정해보세요.`
+    : "";
+  recalc();
+  document.getElementById("tabbtn-calc").click();
+  document.querySelector(".calc-grid").scrollIntoView({behavior:"smooth", block:"start"});
+}
+
+function renderInvResults(list){
+  const box = document.getElementById("inv-results");
+  if (!list.length){ box.innerHTML = `<div class="footnote" style="padding:8px 2px;">검색 결과가 없습니다.</div>`; return; }
+  box.innerHTML = list.slice(0,30).map((r,idx) => `
+    <button type="button" class="btn btn-ghost btn-sm" data-idx="${idx}" style="justify-content:space-between;width:100%;text-align:left;">
+      <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:60%;">${r.n} <span style="color:var(--text-muted);">· ${r.l} · ${r.y}</span></span>
+      <span class="mono num" style="color:var(--brand);">${manwon(r.b)}</span>
+    </button>
+  `).join("");
+  box.querySelectorAll("button[data-idx]").forEach(btn => {
+    btn.addEventListener("click", () => loadFromRecord(list[+btn.dataset.idx]));
+  });
+}
+
+function wireInventorySearch(){
+  const input = document.getElementById("inv-search");
+  const defaultList = [...BIDS].sort((a,b)=>b.p-a.p).slice(0,8);
+  renderInvResults(defaultList);
+  input.addEventListener("input", () => {
+    const q = input.value.trim().toLowerCase();
+    if (!q){ renderInvResults(defaultList); return; }
+    const filtered = BIDS.filter(r => r.n.toLowerCase().includes(q) || r.l.toLowerCase().includes(q));
+    renderInvResults(filtered);
+  });
+}
+
+/* ================= tab2: insights ================= */
+function renderLeaderboard(){
+  const box = document.getElementById("leaderboard");
+  const sorted = [...ANALYSIS.models].sort((a,b)=>b.r2-a.r2);
+  box.innerHTML = sorted.map((m,i) => `
+    <div class="lead-row ${m.picked?'picked':''}">
+      <span class="rank">${String(i+1).padStart(2,"0")}</span>
+      <span class="name">${m.name}${m.picked?'<span class="badge badge-brand">채택</span>':''}</span>
+      <span class="metric">${m.r2.toFixed(3)}</span>
+      <span class="metric">${manwon(m.rmse)}</span>
+      <span class="metric">${m.overfit.toFixed(1)}%p</span>
+    </div>
+  `).join("");
+}
+
+function renderModelChart(){
+  const sorted = [...ANALYSIS.models].sort((a,b)=>b.r2-a.r2);
+  const items = sorted.map(m => ({label:m.name, value:m.r2, color: m.picked?"var(--brand)":"var(--text-muted)", muted: !m.picked}));
+  renderBarChart(document.getElementById("chart-models"), items, {fmt: v=>v.toFixed(3), max:1});
+}
+
+function renderImportanceCharts(){
+  renderBarChart(document.getElementById("chart-perm"), ANALYSIS.perm.map(it=>({label:it.label, value:it.value, color:"var(--series-1)"})), {fmt:v=>v.toFixed(3), tight:true});
+  renderBarChart(document.getElementById("chart-shap2"), ANALYSIS.shap.map(it=>({label:it.label, value:it.value, color:"var(--series-2)"})), {fmt:v=>v.toFixed(3), tight:true});
+}
+
+function renderHypothesisCards(){
+  const box = document.getElementById("hypo-grid");
+  box.innerHTML = ANALYSIS.hypothesis.map(h => `
+    <div class="hypo-card">
+      <div class="hypo-head">
+        <div><span class="hypo-id">${h.id}</span><div style="font-weight:700;font-size:13.5px;margin-top:2px;">${h.title}</div></div>
+        <span class="badge ${h.accept?'badge-good':'badge-critical'}">${h.accept?'채택(유의)':'기각'}</span>
+      </div>
+      <div class="hypo-stat">
+        <div><span class="l">p-value</span><span class="v">${h.p < 0.0001 ? h.p.toExponential(2) : h.p.toFixed(5)}</span></div>
+        ${h.coef!==null ? `<div><span class="l">계수 방향</span><span class="v">${h.coef<0?"▼ 음(-)":"▲ 양(+)"}</span></div>` : ""}
+      </div>
+      <div class="hypo-text">${h.text}</div>
+    </div>
+  `).join("");
+}
+
+function renderEdaCharts(){
+  const ageItems = ANALYSIS.eda.ageBinLabel.map((lab,i) => ({label:lab, value: interp(ANALYSIS.eda.ageCurve, ANALYSIS.eda.ageBinX[i]), color:"var(--series-3)"}));
+  renderBarChart(document.getElementById("chart-age-eda"), ageItems, {fmt: v=>manwon(v)});
+  const ownerItems = Object.entries(ANALYSIS.eda.ownerMedian).map(([lab,val]) => ({label:lab, value:val, color:"var(--series-4)"}));
+  renderBarChart(document.getElementById("chart-owner-eda"), ownerItems, {fmt: v=>manwon(v)});
+}
+
+/* ================= scenarios ================= */
+function loadScenario(idx){
+  const finders = [
+    r => r.n === "Hyundai i20 1.4 Sportz" && r.l === "Kochi" && r.y === 2019,
+    r => r.n === "Toyota Innova 2.5 GX 8 STR" && r.l === "Delhi" && r.y === 2011,
+    r => r.n === "Maruti Swift Dzire VXI" && r.l === "Coimbatore" && r.y === 2016
+  ];
+  const rec = BIDS.find(finders[idx]);
+  if (rec) loadFromRecord(rec);
+}
+
+/* ================= tabs ================= */
+function wireTabs(){
+  document.querySelectorAll(".tabbtn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".tabbtn").forEach(b => b.setAttribute("aria-selected","false"));
+      btn.setAttribute("aria-selected","true");
+      const target = btn.dataset.tab;
+      document.querySelectorAll(".tabpanel").forEach(p => p.classList.remove("active"));
+      document.getElementById("tab-"+target).classList.add("active");
+    });
+  });
+  const jump = document.getElementById("jump-insight");
+  if (jump) jump.addEventListener("click", e => { e.preventDefault(); document.getElementById("tabbtn-insight").click(); window.scrollTo({top:0, behavior:"smooth"}); });
+}
+
+/* ================= init ================= */
+function init(){
+  wireTabs();
+  wireForm();
+  syncFormUI();
+  wireInventorySearch();
+  renderLeaderboard();
+  renderModelChart();
+  renderImportanceCharts();
+  renderHypothesisCards();
+  renderEdaCharts();
+  recalc();
+}
+document.addEventListener("DOMContentLoaded", init);
+</script>

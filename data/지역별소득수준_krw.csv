@@ -1,0 +1,111 @@
+Location,State,Year,INR,KRW
+Ahmedabad,Gujarat,2011,87481,1312.22
+Ahmedabad,Gujarat,2012,102826,1542.39
+Ahmedabad,Gujarat,2013,113139,1697.08
+Ahmedabad,Gujarat,2014,127017,1905.26
+Ahmedabad,Gujarat,2015,139254,2088.81
+Ahmedabad,Gujarat,2016,156295,2344.43
+Ahmedabad,Gujarat,2017,176961,2654.42
+Ahmedabad,Gujarat,2018,197457,2961.86
+Ahmedabad,Gujarat,2019,212428,3186.42
+Ahmedabad,Gujarat,2020,207324,3109.86
+Bangalore,Karnataka,2011,90263,1353.94
+Bangalore,Karnataka,2012,102319,1534.78
+Bangalore,Karnataka,2013,118829,1782.44
+Bangalore,Karnataka,2014,130024,1950.36
+Bangalore,Karnataka,2015,148108,2221.62
+Bangalore,Karnataka,2016,169898,2548.47
+Bangalore,Karnataka,2017,185840,2787.6
+Bangalore,Karnataka,2018,205245,3078.68
+Bangalore,Karnataka,2019,222141,3332.12
+Bangalore,Karnataka,2020,221683,3325.24
+Chennai,Tamil Nadu,2011,93112,1396.68
+Chennai,Tamil Nadu,2012,105340,1580.1
+Chennai,Tamil Nadu,2013,116960,1754.4
+Chennai,Tamil Nadu,2014,129494,1942.41
+Chennai,Tamil Nadu,2015,142028,2130.42
+Chennai,Tamil Nadu,2016,156595,2348.93
+Chennai,Tamil Nadu,2017,175276,2629.14
+Chennai,Tamil Nadu,2018,194373,2915.6
+Chennai,Tamil Nadu,2019,206165,3092.48
+Chennai,Tamil Nadu,2020,209628,3144.42
+Coimbatore,Tamil Nadu,2011,93112,1396.68
+Coimbatore,Tamil Nadu,2012,105340,1580.1
+Coimbatore,Tamil Nadu,2013,116960,1754.4
+Coimbatore,Tamil Nadu,2014,129494,1942.41
+Coimbatore,Tamil Nadu,2015,142028,2130.42
+Coimbatore,Tamil Nadu,2016,156595,2348.93
+Coimbatore,Tamil Nadu,2017,175276,2629.14
+Coimbatore,Tamil Nadu,2018,194373,2915.6
+Coimbatore,Tamil Nadu,2019,206165,3092.48
+Coimbatore,Tamil Nadu,2020,209628,3144.42
+Delhi,Delhi,2011,185001,2775.02
+Delhi,Delhi,2012,205568,3083.52
+Delhi,Delhi,2013,227900,3418.5
+Delhi,Delhi,2014,247209,3708.14
+Delhi,Delhi,2015,270261,4053.92
+Delhi,Delhi,2016,295558,4433.37
+Delhi,Delhi,2017,318323,4774.84
+Delhi,Delhi,2018,338730,5080.95
+Delhi,Delhi,2019,355798,5336.97
+Delhi,Delhi,2020,322311,4834.66
+Hyderabad,Telangana,2011,91121,1366.82
+Hyderabad,Telangana,2012,101007,1515.1
+Hyderabad,Telangana,2013,112162,1682.43
+Hyderabad,Telangana,2014,124104,1861.56
+Hyderabad,Telangana,2015,140840,2112.6
+Hyderabad,Telangana,2016,159395,2390.93
+Hyderabad,Telangana,2017,179358,2690.37
+Hyderabad,Telangana,2018,209848,3147.72
+Hyderabad,Telangana,2019,231326,3469.89
+Hyderabad,Telangana,2020,225734,3386.01
+Jaipur,Rajasthan,2011,57192,857.88
+Jaipur,Rajasthan,2012,63658,954.87
+Jaipur,Rajasthan,2013,69480,1042.2
+Jaipur,Rajasthan,2014,76429,1146.44
+Jaipur,Rajasthan,2015,83426,1251.39
+Jaipur,Rajasthan,2016,91924,1378.86
+Jaipur,Rajasthan,2017,98698,1480.47
+Jaipur,Rajasthan,2018,106604,1599.06
+Jaipur,Rajasthan,2019,115534,1733.01
+Jaipur,Rajasthan,2020,114925,1723.88
+Kochi,Kerala,2011,97912,1468.68
+Kochi,Kerala,2012,110314,1654.71
+Kochi,Kerala,2013,123388,1850.82
+Kochi,Kerala,2014,135537,2033.06
+Kochi,Kerala,2015,148133,2222
+Kochi,Kerala,2016,166246,2493.69
+Kochi,Kerala,2017,183252,2748.78
+Kochi,Kerala,2018,205437,3081.56
+Kochi,Kerala,2019,208879,3133.18
+Kochi,Kerala,2020,194432,2916.48
+Kolkata,West Bengal,2011,51543,773.14
+Kolkata,West Bengal,2012,58195,872.92
+Kolkata,West Bengal,2013,65932,988.98
+Kolkata,West Bengal,2014,68876,1033.14
+Kolkata,West Bengal,2015,75992,1139.88
+Kolkata,West Bengal,2016,82291,1234.36
+Kolkata,West Bengal,2017,91401,1371.02
+Kolkata,West Bengal,2018,103920,1558.8
+Kolkata,West Bengal,2019,110316,1654.74
+Kolkata,West Bengal,2020,105108,1576.62
+Mumbai,Maharashtra,2011,99597,1493.96
+Mumbai,Maharashtra,2012,112092,1681.38
+Mumbai,Maharashtra,2013,125261,1878.92
+Mumbai,Maharashtra,2014,132836,1992.54
+Mumbai,Maharashtra,2015,146815,2202.22
+Mumbai,Maharashtra,2016,163726,2455.89
+Mumbai,Maharashtra,2017,172663,2589.95
+Mumbai,Maharashtra,2018,182865,2742.98
+Mumbai,Maharashtra,2019,189843,2847.64
+Mumbai,Maharashtra,2020,182454,2736.81
+Pune,Maharashtra,2011,99597,1493.96
+Pune,Maharashtra,2012,112092,1681.38
+Pune,Maharashtra,2013,125261,1878.92
+Pune,Maharashtra,2014,132836,1992.54
+Pune,Maharashtra,2015,146815,2202.22
+Pune,Maharashtra,2016,163726,2455.89
+Pune,Maharashtra,2017,172663,2589.95
+Pune,Maharashtra,2018,182865,2742.98
+Pune,Maharashtra,2019,189843,2847.64
+Pune,Maharashtra,2020,182454,2736.81

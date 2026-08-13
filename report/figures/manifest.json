@@ -1,0 +1,82 @@
+[
+  {
+    "file": "fig_01_1_데이터_로드_기본_구조_파악.png",
+    "cell_index": 8,
+    "heading": "1. 데이터 로드 & 기본 구조 파악"
+  },
+  {
+    "file": "fig_02_2_단위_수치_파싱_전처리_Mileage_Engine_Power_New_.png",
+    "cell_index": 11,
+    "heading": "2. 단위 수치 파싱 전처리 (Mileage / Engine / Power / New_Price)"
+  },
+  {
+    "file": "fig_03_3_State_Year_기반_정밀_병합.png",
+    "cell_index": 14,
+    "heading": "3. State·Year 기반 정밀 병합"
+  },
+  {
+    "file": "fig_04_5_타깃_변수_Price_로그_변환.png",
+    "cell_index": 18,
+    "heading": "5. 타깃 변수(Price) 로그 변환"
+  },
+  {
+    "file": "fig_05_6_EDA_소득_KRW_vs_가격_Price_관계.png",
+    "cell_index": 21,
+    "heading": "6. EDA ① — 소득(KRW) vs 가격(Price) 관계"
+  },
+  {
+    "file": "fig_06_7_EDA_Location별_가격_분포_Boxplot.png",
+    "cell_index": 24,
+    "heading": "7. EDA ② — Location별 가격 분포 (Boxplot)"
+  },
+  {
+    "file": "fig_07_8_EDA_비선형_감가_패턴_주행거리_연식.png",
+    "cell_index": 26,
+    "heading": "8. EDA ③ — 비선형 감가 패턴 (주행거리 · 연식)"
+  },
+  {
+    "file": "fig_08_9_EDA_소유이력_연료타입별_가격.png",
+    "cell_index": 29,
+    "heading": "9. EDA ④ — 소유이력 · 연료타입별 가격"
+  },
+  {
+    "file": "fig_09_10_EDA_수치형_변수_상관관계_히트맵.png",
+    "cell_index": 31,
+    "heading": "10. EDA ⑤ — 수치형 변수 상관관계 히트맵"
+  },
+  {
+    "file": "fig_10_12_모델별_5_fold_교차검증_성능_비교.png",
+    "cell_index": 36,
+    "heading": "12. 모델별 5-fold 교차검증 성능 비교"
+  },
+  {
+    "file": "fig_11_13_최적_모델_진단_실측_vs_예측_잔차_플롯.png",
+    "cell_index": 38,
+    "heading": "13. 최적 모델 진단 — 실측 vs 예측 / 잔차 플롯"
+  },
+  {
+    "file": "fig_12_14_변수_중요도_Permutation_Importance.png",
+    "cell_index": 40,
+    "heading": "14. 변수 중요도 ① — Permutation Importance"
+  },
+  {
+    "file": "fig_13_15_변수_중요도_SHAP_Summary.png",
+    "cell_index": 42,
+    "heading": "15. 변수 중요도 ② — SHAP Summary"
+  },
+  {
+    "file": "fig_14_15_변수_중요도_SHAP_Summary.png",
+    "cell_index": 42,
+    "heading": "15. 변수 중요도 ② — SHAP Summary"
+  },
+  {
+    "file": "fig_15_16_가설_검증_통계_회귀분석_statsmodels_Robust_SE.png",
+    "cell_index": 46,
+    "heading": "16. 가설 검증 — 통계 회귀분석 (statsmodels, Robust SE)"
+  },
+  {
+    "file": "fig_16_17_매입가_Bid_Price_산정_시연.png",
+    "cell_index": 50,
+    "heading": "17. 매입가(Bid Price) 산정 시연"
+  }
+]

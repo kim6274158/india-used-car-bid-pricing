@@ -216,5 +216,6 @@ python scripts/export_merged_data.py   # 전처리·병합 결과만 outputs/mer
 
 ---
 
-## 9. Author
+## 9. Team (7)
+김연희, 강인수, 박승형, 박지훈, 양진후, 이선희 , 임성민
 

@@ -6,7 +6,7 @@
 > **핵심 결과 한눈에 보기**
 > - OLS·Ridge·RandomForest·GradientBoosting·XGBoost·LightGBM·CatBoost **7개 모델**을 5-fold 교차검증으로 비교해 **LightGBM**(CV **R² = 0.859**, RMSE ≈ 664만원)을 최적 모델로 선정
 > - MAE 기준 평균 판매가 대비 오차율 **약 16.8%** — 소수 초고가 차량이 RMSE를 밀어올리는 것을 감안하면 실사용 수준의 정확도
-> - 예측 판매가에 **리스크 연동 차등 마진(12~25%)**을 적용해 매입가 산정 로직까지 엔드투엔드로 구현하고, 딜러용 웹 콘솔([app/dealer_bid_console.html](app/dealer_bid_console.html))로 시연
+> - 예측 판매가에 리스크 연동 차등 마진(12~25%)을 적용해 매입가 산정 로직까지 엔드투엔드로 구현하고, 딜러용 웹 콘솔([app/dealer_bid_console.html](app/dealer_bid_console.html))로 시연
 
 - **목표**
   1. 중고차 판매가를 가장 정확히 예측하는 모델 도출

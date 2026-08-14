@@ -1,12 +1,12 @@
-# 🚗 AutoBridge : 인도 중고차 매입가 예측 & 비즈니스 전략 분석
+# 🚗 AutoBridge — 인도 중고차 매입가 예측 & 비즈니스 전략 분석
 
 인도 중고차 매입 딜러의 관점에서, 중고차 거래 데이터와 지역별 소득 데이터를 결합해
 **적정 매입가(Bid Price)를 자동으로 산정하는 파이프라인**을 만든 데이터 분석 프로젝트입니다.
 
 > **핵심 결과 한눈에 보기**
-> - OLS·Ridge·RandomForest·GradientBoosting·XGBoost·LightGBM·CatBoost **7개 모델**을 5-fold 교차검증으로 비교해 **LightGBM**(CV **R² = 0.859**, RMSE ≈ 664만원)을 최적 모델로 선정
-> - MAE 기준 평균 판매가 대비 오차율 **약 16.8%** — 소수 초고가 차량이 RMSE를 밀어올리는 것을 감안하면 실사용 수준의 정확도
-> - 예측 판매가에 리스크 연동 차등 마진(12~25%)을 적용해 매입가 산정 로직까지 엔드투엔드로 구현하고, 딜러용 웹 콘솔([app/dealer_bid_console.html](app/dealer_bid_console.html))로 시연
+> - 🎯 OLS·Ridge·RandomForest·GradientBoosting·XGBoost·LightGBM·CatBoost **7개 모델**을 5-fold 교차검증으로 비교해 **LightGBM**(CV **R² = 0.859**, RMSE ≈ 664만원)을 최적 모델로 선정
+> - 📉 MAE 기준 평균 판매가 대비 오차율 **약 16.8%** — 소수 초고가 차량이 RMSE를 밀어올리는 것을 감안하면 실사용 수준의 정확도
+> - 💰 예측 판매가에 리스크 연동 차등 마진(12~25%)을 적용해 매입가 산정 로직까지 엔드투엔드로 구현하고, 딜러용 웹 콘솔([app/dealer_bid_console.html](app/dealer_bid_console.html))로 시연
 
 - **목표**
   1. 중고차 판매가를 가장 정확히 예측하는 모델 도출
@@ -98,7 +98,7 @@ RMSE 기준 비율이 크게 보이는 것은 소수의 초고가 차량이 제�
 > 같은 도시의 차량들은 소득값이 거의 동일하다 보니(도시 단위로 소득이 결정되므로) 두 변수가 사실상
 > 같은 정보를 나눠 갖는 **다중공선성** 상태가 됩니다. Location 더미가 "그 도시가 원래 비싼 이유"를
 > 이미 다 흡수해버려서, 소득 변수에는 설명할 몫이 거의 남지 않고 부호도 불안정해진 것으로 해석됩니다.
-> →> 실무적으로는 "소득"보다 **"어느 도시인가"** 자체를 매입가 조정 축으로 쓰는 것이 더 안정적입니다.
+> → 실무적으로는 "소득"보다 **"어느 도시인가"** 자체를 매입가 조정 축으로 쓰는 것이 더 안정적입니다.
 
 ### 매입가 산정 로직
 
@@ -138,7 +138,7 @@ Bid_Price             = Predicted_Sale_Price × (1 − Target_Margin)
 역할별로 폴더를 나눴습니다. (`catboost_info/`는 노트북/스크립트를 실행할 때마다 자동으로 생기는 학습 로그라 저장소에는 올리지 않습니다 — `.gitignore` 처리)
 
 ```
-india-used-car-bid-pricing/
+AutoBridge/
 ├── data/                            # 원본 데이터
 │   ├── Car.csv                      # 중고차 거래 원본 데이터
 │   └── 지역별소득수준_krw.csv         # 지역별 소득 원본 데이터
@@ -147,7 +147,8 @@ india-used-car-bid-pricing/
 ├── scripts/                          # 재현/빌드용 스크립트
 │   ├── analysis2.py                  # analysis.ipynb와 동일한 분석의 .py(CLI) 버전
 │   ├── build_notebook.py             # notebooks/analysis.ipynb를 코드로 생성하는 빌더
-│   └── build_report_html.py          # report/의 그림으로 report/report.html을 조립하는 스크립트
+│   ├── build_report_html.py          # report/의 그림으로 report/report.html을 조립하는 스크립트
+│   └── export_merged_data.py         # 전처리·병합 단계(§1~4)만 재현해 outputs/merged_preprocessed.csv를 생성 (모델 학습 없이 수 초 내 완료)
 ├── report/
 │   ├── report.html                   # 비전공자용 분석 결과 요약 보고서
 │   └── figures/                      # 보고서에 쓰인 그림 16장 + manifest.json
@@ -155,7 +156,8 @@ india-used-car-bid-pricing/
 │   ├── dealer_bid_console.html       # 매입가 산정 결과를 보여주는 딜러용 웹 콘솔(프로토타입)
 │   └── screenshot.png                # 위 콘솔의 화면 캡처
 ├── outputs/
-│   └── bid_price_predictions.csv     # 17단계 실행 결과물 — 매입 검토 대상 차량별 예측가/마진/매입가
+│   ├── bid_price_predictions.csv     # 17단계 실행 결과물 — 매입 검토 대상 차량별 예측가/마진/매입가
+│   └── merged_preprocessed.csv       # 전처리·병합이 끝난 전체 데이터셋(7,253행) — 모델링용/매입대상 구분(data_split) 포함
 └── requirements.txt                  # 분석 실행에 필요한 패키지 목록
 ```
 
@@ -181,6 +183,7 @@ jupyter notebook notebooks/analysis.ipynb
 python scripts/build_notebook.py       # notebooks/analysis.ipynb를 처음부터 다시 생성
 python scripts/build_report_html.py    # report/figures를 읽어 report/report.html을 재생성
 python scripts/analysis2.py            # 노트북과 동일한 분석을 커맨드라인에서 실행 (수 분 내외)
+python scripts/export_merged_data.py   # 전처리·병합 결과만 outputs/merged_preprocessed.csv로 저장 (모델 학습 없이 수 초)
 ```
 
 ---
@@ -201,9 +204,9 @@ python scripts/analysis2.py            # 노트북과 동일한 분석을 커맨
 ---
 
 ## 8. 데이터 출처
-#### Car.csv
+### Car.csv
 - 포스코 빅데이터·AI 아카데미 제공
-#### 지역별소득수준_krw.csv
+### 지역별소득수준_krw.csv
 - 데이터 출처: Reserve Bank of India, Database on Indian Economy (DBIE)
 - 원자료명: Table 19 - Per Capita Net State Domestic Product (Current Prices), Base: 2011-12
 - 수집 범위: 2011-12 ~ 2019-20 회계연도, 인도 9개 주
